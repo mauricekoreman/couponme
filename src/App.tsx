@@ -1,11 +1,14 @@
 import './App.css'
+import { Login } from "./pages/login/login.component";
 
 function App() {
   return (
-    <div className="App">
-     <h1>hallo wereld</h1>
+    <div className='App'>
+      <Login />
     </div>
-  )
+  );
 }
 
 export default App
+
+

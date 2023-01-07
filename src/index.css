@@ -1,3 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "Rockwell";
+    src: url(/src/assets/fonts/Rockwell.ttf);
+  }
+  @font-face {
+    font-family: "RockwellCondensed";
+    src: url(/src/assets/fonts/Rockwell-condensed.ttf);
+  }
+  @font-face {
+    font-family: "RockwellBold";
+    src: url(/src/assets/fonts/Rockwell-bold.ttf);
+  }
+  @font-face {
+    font-family: "RockwellCondensedBold";
+    src: url(/src/assets/fonts/Rockwell-condensed-bold.ttf);
+  }
+  @font-face {
+    font-family: "MontserratThin";
+    src: url(/src/assets/fonts/Montserrat-Thin.ttf);
+  }
+  @font-face {
+    font-family: "MontserratLight";
+    src: url(/src/assets/fonts/Montserrat-Light.ttf);
+  }
+  @font-face {
+    font-family: "MontserratRegular";
+    src: url(/src/assets/fonts/Montserrat-Regular.ttf);
+  }
+  @font-face {
+    font-family: "MontserratMedium";
+    src: url(/src/assets/fonts/Montserrat-Medium.ttf);
+  }
+  @font-face {
+    font-family: "MontserratSemiBold";
+    src: url(/src/assets/fonts/Montserrat-SemiBold.ttf);
+  }
+  @font-face {
+    font-family: "MontserratBold";
+    src: url(/src/assets/fonts/Montserrat-Bold.ttf);
+  }
+}
