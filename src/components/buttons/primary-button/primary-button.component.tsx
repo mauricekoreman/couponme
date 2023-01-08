@@ -1,6 +1,6 @@
 interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export const PrimaryButton = ({ title, disabled, onClick }: IButton) => (
