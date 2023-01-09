@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   User,
   UserCredential,
@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase/firebase.config";
 import { doc, setDoc } from "firebase/firestore";
+import { generateRandom } from "../utils/generate-random";
 
 interface ISignIn {
   email: string;
@@ -20,69 +21,64 @@ interface IRegister extends ISignIn {
   name: string;
 }
 
+type TUser = User | null | undefined;
+
 interface IAuthContext {
-  user: User | null;
+  user: TUser;
+  userLoaded: boolean;
   signIn: ({ email, password }: ISignIn) => Promise<void | UserCredential>;
   createUser: ({ email, password }: IRegister) => Promise<void | UserCredential>;
+  signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
+  changeEmail: (newEmail: string) => Promise<void> | undefined;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<TUser>(undefined);
+  const [userLoaded, setUserLoaded] = useState<boolean>(false);
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // user is signed in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
-    } else {
-      // user is signed out
-      setUser(null);
-    }
-  });
-
-  const signIn = async ({ email, password }: ISignIn) => {
-    return signInWithEmailAndPassword(auth, email, password).catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      console.error(errorCode, errorMessage);
+      setUserLoaded(true);
     });
-  };
+    return () => unsubscribe();
+  }, []);
 
-  const createUser = async ({ email, password, name }: IRegister) => {
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then(async (user) => {
-        await setDoc(doc(db, "users", user.user.uid), {
-          email,
-          name,
-          linked: null,
-        });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+  async function signIn({ email, password }: ISignIn) {
+    return signInWithEmailAndPassword(auth, email, password);
+  }
 
-        console.error(errorCode, errorMessage);
+  async function createUser({ email, password, name }: IRegister) {
+    return createUserWithEmailAndPassword(auth, email, password).then(async (user) => {
+      await setDoc(doc(db, "users", user.user.uid), {
+        email,
+        name,
+        linked: null,
+        code: generateRandom(6),
       });
-  };
+    });
+  }
 
-  const signOut = () => {
+  function signOut() {
     return auth.signOut();
-  };
+  }
 
-  const resetPassword = ({ email }: { email: string }) => {
+  function resetPassword(email: string) {
     return sendPasswordResetEmail(auth, email);
-  };
+  }
 
-  const changeEmail = ({ newEmail }: { newEmail: string }) => {
+  function changeEmail(newEmail: string) {
     if (user) {
       return updateEmail(user, newEmail);
     }
-  };
+  }
 
   const value = {
     user,
+    userLoaded,
     signIn,
     createUser,
     signOut,

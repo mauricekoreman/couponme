@@ -30,10 +30,22 @@ module.exports = {
         brutal: "1px 1px 0 rgba(0, 0, 0, 1)",
         brutal2: "2px 2px 0 rgba(0, 0, 0, 1)",
       },
+      fontSize: {
+        dynamic: "clamp(2rem, 15vw, 3.75rem)",
+      },
     },
   },
   plugins: [],
 };
+
+
+
+
+
+
+
+
+
 
 
 

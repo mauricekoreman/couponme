@@ -1,12 +1,14 @@
-import { FormEvent, useRef, useState } from "react";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import { FormEvent, useRef } from "react";
+import { useAuth } from "../../../context/auth-context";
+import { Input } from "../../../components/input/input.component";
 import { AuthHeading } from "../../../components/auth-heading/auth-heading.component";
 import { PrimaryButton } from "../../../components/buttons/primary-button/primary-button.component";
-import { Input } from "../../../components/input/input.component";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../../context/auth-context";
 
 export const Login = () => {
   const { signIn } = useAuth();
+
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -14,7 +16,12 @@ export const Login = () => {
     e.preventDefault();
 
     if (emailRef.current?.value !== undefined && passwordRef.current?.value !== undefined) {
-      await signIn({ email: emailRef.current.value, password: passwordRef.current.value });
+      await signIn({ email: emailRef.current.value, password: passwordRef.current.value }).catch(
+        (err) => {
+          const message = err.message.replace("Firebase: ", "");
+          toast.error(message);
+        }
+      );
     }
   };
 

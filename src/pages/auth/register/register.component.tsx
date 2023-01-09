@@ -1,36 +1,44 @@
+import { toast } from "react-toastify";
 import { FormEvent, useRef } from "react";
-import { AuthHeading } from "../../../components/auth-heading/auth-heading.component";
-import { Input } from "../../../components/input/input.component";
-import { PrimaryButton } from "../../../components/buttons/primary-button/primary-button.component";
 import { FiArrowLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth-context";
+import { Input } from "../../../components/input/input.component";
+import { AuthHeading } from "../../../components/auth-heading/auth-heading.component";
+import { PrimaryButton } from "../../../components/buttons/primary-button/primary-button.component";
 
 export const Register = () => {
   const { createUser } = useAuth();
+  const navigate = useNavigate();
 
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
 
-  const navigate = useNavigate();
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (
-      nameRef.current?.value !== undefined &&
-      emailRef.current?.value !== undefined &&
-      passwordRef.current?.value !== undefined &&
-      confirmPasswordRef.current?.value !== undefined
-    ) {
-      await createUser({
-        email: emailRef.current.value,
-        password: passwordRef.current.value,
-        name: nameRef.current.value,
-      });
+      !nameRef.current?.value ||
+      !emailRef.current?.value ||
+      !passwordRef.current?.value ||
+      !confirmPasswordRef.current?.value
+    )
+      return;
+
+    if (passwordRef.current?.value !== confirmPasswordRef.current?.value) {
+      return toast.error("Passwords are not the same!");
     }
+
+    await createUser({
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+      name: nameRef.current.value,
+    }).catch((err) => {
+      const message = err.message.replace("Firebase: ", "");
+      toast.error(message);
+    });
   };
 
   return (
