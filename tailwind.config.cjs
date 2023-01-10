@@ -11,6 +11,8 @@ module.exports = {
       orange: "#F8B654",
       red: "#E55F56",
       yellow: "#FFEC3F",
+      black: "#000",
+      white: "#FFF",
     },
     fontFamily: {
       displayRegular: ["Rockwell"],
@@ -37,6 +39,7 @@ module.exports = {
   },
   plugins: [],
 };
+
 
 
 

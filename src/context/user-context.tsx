@@ -138,7 +138,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     userDocRef,
     // couponsReceived: query(
     //   collection(db, "coupons"),
-    //   where("to", "==", user.uid),
+    //   where("to", "==", user?.uid)
     //   orderBy("createdAt", "desc")
     // ),
     // couponsGivenRef: query(

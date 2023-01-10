@@ -14,12 +14,12 @@ export const Input = forwardRef<Ref, IInput>((props, ref) => {
 
   return (
     <div className='w-full max-w-[400px]'>
-      <label className='font-regularMedium mb-1' htmlFor={name}>
+      <label className='font-regularMedium text-lg mb-1' htmlFor={name}>
         {label}
       </label>
       <input
         ref={ref}
-        className='font-regularMedium text-base w-full px-5 py-3 drop-shadow-brutal rounded-md border-2 border-solid border-black mb-5 focus:outline-none'
+        className='font-regularMedium text-lg w-full px-5 py-3 drop-shadow-brutal rounded-md border-2 border-solid border-black mb-5 focus:outline-none'
         value={value}
         name={name}
         onChange={onChange}

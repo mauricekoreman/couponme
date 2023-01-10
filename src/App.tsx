@@ -11,6 +11,8 @@ import { CouponScreen } from "./pages/coupon-screen/coupon-screen.component";
 import { CreateCoupon } from "./pages/create-coupon/create-coupon.component";
 import { ProtectedRoute } from "./components/protected-route/protected-route";
 import { CouponFeedLayout } from "./pages/coupon-feed/coupon-feed-layout/coupon-feed-layout.component";
+import { GivenCoupons } from "./pages/coupon-feed/given-coupons/given-coupons.component";
+import { ReceivedCoupons } from "./pages/coupon-feed/received-coupons/received-coupons.component";
 
 function App() {
   const { userLoaded, user } = useAuth();
@@ -41,7 +43,11 @@ function App() {
             />
           }
         >
-          <Route path='/' element={<CouponFeedLayout />} />
+          <Route path='/' element={<CouponFeedLayout />}>
+            <Route index element={<GivenCoupons />} />
+            <Route path='given-coupons' element={<GivenCoupons />} />
+            <Route path='received-coupons' element={<ReceivedCoupons />} />
+          </Route>
           <Route path='new' element={<CreateCoupon />} />
           <Route path='coupon' element={<CouponScreen />} />
           <Route path='settings' element={<Settings />} />
@@ -55,4 +61,11 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
+
+
 
