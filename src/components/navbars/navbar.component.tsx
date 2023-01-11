@@ -1,4 +1,4 @@
-import { FiArrowLeft, FiSettings } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 interface INavbar {
@@ -15,7 +15,6 @@ export const Navbar = ({
   rightIcon,
 }: INavbar) => {
   const navigate = useNavigate();
-  const xPadding = "1rem";
 
   return (
     <nav className='py-3 flex space-between items-center'>
@@ -23,11 +22,11 @@ export const Navbar = ({
         <FiArrowLeft
           onClick={() => navigate(-1)}
           size={"2rem"}
-          className={`absolute left-[${xPadding}]`}
+          className={`absolute left-[1rem]`}
         />
       )}
       {withTitle && <h1 className='font-displayBold text-2xl text-center flex-1'>{navbarTitle}</h1>}
-      {rightIcon && <div className={`absolute right-[${xPadding}]`}>{rightIcon}</div>}
+      {rightIcon && <div className={`absolute right-[1rem]`}>{rightIcon}</div>}
     </nav>
   );
 };
