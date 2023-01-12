@@ -1,13 +1,35 @@
-import { FiCalendar, FiMinus, FiPlus } from "react-icons/fi";
-import { Input } from "../../components/input/input.component";
-import { Navbar } from "../../components/navbars/navbar.component";
-import { useRef, useState } from "react";
+import { colors } from "./colors";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { DocumentData } from "firebase/firestore";
 import { formatDate } from "../../utils/formatDate";
-import { SquareButton as CounterButton } from "../../components/buttons/square-button/square-button.component";
+import { useUser } from "../../context/user-context";
+import { useAuth } from "../../context/auth-context";
+import { FiCalendar, FiMinus, FiPlus } from "react-icons/fi";
+import { Modal } from "../../components/modal/modal.component";
+import { Input } from "../../components/input/input.component";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { Navbar } from "../../components/navbars/navbar.component";
+import { Sticker } from "../../components/sticker/sticker.component";
+import { createCoupon, getStickers } from "../../firebase/firebase.queries";
+import { SecondaryButton } from "../../components/buttons/square-button/square-button.component";
+import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
 
 export const CreateCoupon = () => {
+  const { user } = useAuth();
+  const { userData } = useUser();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const titleRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLInputElement>(null);
   const [quantityCount, setQuantityCount] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(colors.blue);
+  const [sticker, setSticker] = useState<string | null>(null);
   const dateRef = useRef<HTMLInputElement>(null);
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [stickers, setStickers] = useState<DocumentData | {}>({});
 
   const standardExpirationDate = new Date();
   standardExpirationDate.setMonth(standardExpirationDate.getMonth() + 4);
@@ -20,19 +42,76 @@ export const CreateCoupon = () => {
       setQuantityCount((prevState) => prevState - 1);
     }
   }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      if (!!!titleRef.current?.value || !!!dateRef.current?.value) {
+        throw new Error("Fill in all required fields");
+      }
+
+      const couponData = {
+        title: titleRef.current.value,
+        description: descriptionRef.current?.value,
+        quantity: quantityCount,
+        color: selectedColor,
+        sticker: sticker,
+        used: 0,
+        expirationDate: dateRef.current.value,
+        status: "idle",
+        to: userData!.linked,
+        from: user!.uid,
+        createdAt: formatDate(new Date()),
+      };
+
+      const couponRef = await createCoupon(couponData);
+      // If successful
+      if (!!couponRef) {
+        navigate("/given-coupons");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message as string);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    async function stickers() {
+      if (Object.keys(stickers).length === 0) {
+        const stickerSnap = await getStickers();
+        const data = stickerSnap.data();
+        if (data !== undefined) setStickers(data);
+      }
+    }
+
+    stickers();
+  }, []);
+
   return (
     <div>
       <Navbar navbarTitle='New coupon' withBackButton />
-      <form className='px-4 py-7'>
-        <Input label='Title*' placeholder='Title' type={"text"} name='title' />
-        <Input label='Description*' placeholder='Description' type={"text"} name='description' />
+      <form className='px-4 py-7' onSubmit={handleSubmit}>
+        <Input ref={titleRef} label='Title*' placeholder='Title' type={"text"} name='title' />
+        <Input
+          ref={descriptionRef}
+          label='Description*'
+          placeholder='Description'
+          type={"text"}
+          name='description'
+        />
 
         <div className='mb-5'>
           <label className={standardText}>Quantity</label>
           <div className='flex items-center gap-6 mt-4'>
-            <CounterButton icon={<FiMinus />} onClick={() => clickButton("subtract")} />
+            <SecondaryButton textOrIcon={<FiMinus />} onClick={() => clickButton("subtract")} />
             <p className={standardText}>{quantityCount}</p>
-            <CounterButton icon={<FiPlus />} onClick={() => clickButton("add")} />
+            <SecondaryButton textOrIcon={<FiPlus />} onClick={() => clickButton("add")} />
           </div>
         </div>
 
@@ -47,7 +126,6 @@ export const CreateCoupon = () => {
               onFocus={() => dateRef.current?.showPicker()}
               name='date'
               type='date'
-              required
               min={formatDate(new Date())}
               defaultValue={formatDate(standardExpirationDate)}
               className={`${standardText} bg-offwhite border-0 outline-black p-0 m-0`}
@@ -55,10 +133,68 @@ export const CreateCoupon = () => {
           </div>
         </div>
 
-        <div>
+        <div className='mb-14'>
           <label>Choose a coupon color</label>
+          <div className='flex flex-row flex-wrap justify-between'>
+            {Object.entries(colors).map((color) => (
+              <div
+                key={color[0]}
+                style={{ backgroundColor: color[1] }}
+                className={`w-16 h-12 m-1 grow cursor-pointer ${
+                  color[1] === selectedColor && "border-2"
+                }`}
+                onClick={() => setSelectedColor(color[1])}
+              />
+            ))}
+          </div>
         </div>
+
+        <div className='mb-20 flex flex-col items-center'>
+          {sticker ? (
+            <Sticker stickerURI={sticker} />
+          ) : (
+            <label htmlFor='choose sticker' className='font-displayRegular text-2xl'>
+              Choose a sticker
+            </label>
+          )}
+
+          <div className='flex gap-2'>
+            <SecondaryButton
+              onClick={() => setModalOpen((prev) => !prev)}
+              textOrIcon='Choose'
+              className='px-8 mt-5'
+              name='choose sticker'
+            />
+            {sticker && (
+              <SecondaryButton textOrIcon='Delete' className='px-8 mt-5' name='delete sticker' />
+            )}
+          </div>
+          {modalOpen && (
+            <Modal title='Choose sticker' close={() => setModalOpen((prev) => !prev)}>
+              <div className='flex flex-wrap justify-between'>
+                {Object.entries(stickers).map((el, i) => (
+                  <img
+                    key={i}
+                    src={el[1].url}
+                    className='h-32 w-32 object-contain'
+                    onClick={() => {
+                      setSticker(el[1].url);
+                      setModalOpen((prev) => !prev);
+                    }}
+                  />
+                ))}
+              </div>
+            </Modal>
+          )}
+        </div>
+
+        <PrimaryButton
+          disabled={loading}
+          title={loading ? "Loading..." : "Create coupon"}
+          type='submit'
+        />
       </form>
     </div>
   );
 };
+

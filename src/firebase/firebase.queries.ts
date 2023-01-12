@@ -1,4 +1,4 @@
-import { collection, orderBy, query, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, orderBy, query, where } from "firebase/firestore";
 import { db } from "./firebase.config";
 
 export function getCouponsReceivedQuery(userId: string) {
@@ -20,3 +20,31 @@ export function getCouponsGivenQuery(userId: string) {
 
   return couponsGivenQuery;
 }
+
+export async function getStickers() {
+  const catStickerRef = doc(collection(db, "stickers"), "cat-stickers");
+  const catStickersSnap = await getDoc(catStickerRef);
+
+  return catStickersSnap;
+}
+
+interface ICreateCouponFn {
+  title: string;
+  description: string | undefined;
+  quantity: number;
+  color: string;
+  sticker: string | null;
+  used: number;
+  expirationDate: string;
+  status: string;
+  to: string;
+  from: string;
+  createdAt: string;
+}
+
+export async function createCoupon(couponData: ICreateCouponFn) {
+  const couponRef = await addDoc(collection(db, "coupons"), couponData);
+
+  return couponRef;
+}
+
