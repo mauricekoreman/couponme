@@ -1,17 +1,4 @@
-// import { formatDate } from "../../utils/formatDate";
-
-import { useNavigate } from "react-router-dom";
-import { couponStatusEnum } from "../../pages/coupon-screen/coupon-screen.component";
-
-export interface ICouponData {
-  title: string;
-  description: string;
-  quantity: number;
-  used: number;
-  status: couponStatusEnum;
-  color: string;
-  expirationDate: string; // TODO: formDate toDate
-}
+import { ICouponData } from "../../context/coupon-context";
 
 interface ICoupon {
   id: string;
@@ -20,7 +7,7 @@ interface ICoupon {
 }
 
 export const Coupon = ({ id, item, withDesc }: ICoupon) => {
-  const { title, quantity, color, expirationDate, description } = item;
+  const { title, quantity, color, expirationDate, description, used } = item;
 
   return (
     <div
@@ -34,7 +21,12 @@ export const Coupon = ({ id, item, withDesc }: ICoupon) => {
         <p className='font-displayRegular text-sm text-center'>Quantity</p>
         <div className='flex flex-row flex-wrap justify-center'>
           {[...Array(quantity)].map((_, i) => (
-            <div key={i} className='h-4 w-7 m-1 border-2 bg-off bg-white drop-shadow-brutal' />
+            <div
+              key={i}
+              className={`h-4 w-7 m-1 border-2 bg-off drop-shadow-brutal ${
+                i + 1 <= used ? "bg-[#b5b4b4]" : "bg-white"
+              }`}
+            />
           ))}
         </div>
       </div>

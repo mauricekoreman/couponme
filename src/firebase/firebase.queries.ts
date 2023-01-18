@@ -28,6 +28,12 @@ export async function getStickers() {
   return catStickersSnap;
 }
 
+export async function getCouponRef(couponId: string) {
+  const couponRef = doc(collection(db, "coupons"), couponId);
+
+  return couponRef;
+}
+
 interface ICreateCouponFn {
   title: string;
   description: string | undefined;
