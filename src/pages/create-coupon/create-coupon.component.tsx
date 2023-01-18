@@ -14,6 +14,7 @@ import { Sticker } from "../../components/sticker/sticker.component";
 import { createCoupon, getStickers } from "../../firebase/firebase.queries";
 import { SecondaryButton } from "../../components/buttons/square-button/square-button.component";
 import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
+import { couponStatusEnum } from "../coupon-screen/coupon-screen.component";
 
 export const CreateCoupon = () => {
   const { user } = useAuth();
@@ -61,7 +62,7 @@ export const CreateCoupon = () => {
         sticker: sticker,
         used: 0,
         expirationDate: dateRef.current.value,
-        status: "idle",
+        status: couponStatusEnum.IDLE,
         to: userData!.linked,
         from: user!.uid,
         createdAt: formatDate(new Date()),

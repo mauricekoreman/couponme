@@ -17,7 +17,7 @@ export const Navbar = ({
   const navigate = useNavigate();
 
   return (
-    <nav className='py-3 flex space-between items-center'>
+    <nav className='h-14 flex space-between items-center'>
       {withBackButton && (
         <FiArrowLeft
           onClick={() => navigate(-1)}

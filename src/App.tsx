@@ -1,6 +1,6 @@
 import { useAuth } from "./context/auth-context";
 import { useUser } from "./context/user-context";
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import { Login } from "./pages/auth/login/login.component";
 import { Loading } from "./pages/loading/loading.component";
 import { Settings } from "./pages/settings/settings.component";
@@ -13,6 +13,7 @@ import { ProtectedRoute } from "./components/protected-route/protected-route";
 import { CouponFeedLayout } from "./pages/coupon-feed/coupon-feed-layout/coupon-feed-layout.component";
 import { GivenCoupons } from "./pages/coupon-feed/given-coupons/given-coupons.component";
 import { ReceivedCoupons } from "./pages/coupon-feed/received-coupons/received-coupons.component";
+import { CouponProvider } from "./context/coupon-context";
 
 function App() {
   const { userLoaded, user } = useAuth();
@@ -43,14 +44,16 @@ function App() {
             />
           }
         >
-          <Route path='/' element={<CouponFeedLayout />}>
-            <Route index element={<GivenCoupons />} />
-            <Route path='given-coupons' element={<GivenCoupons />} />
-            <Route path='received-coupons' element={<ReceivedCoupons />} />
+          <Route element={<CouponProvider children={<Outlet />} />}>
+            <Route path='/' element={<CouponFeedLayout />}>
+              <Route index element={<GivenCoupons />} />
+              <Route path='given-coupons' element={<GivenCoupons />} />
+              <Route path='received-coupons' element={<ReceivedCoupons />} />
+            </Route>
+            <Route path='new' element={<CreateCoupon />} />
+            <Route path='coupon' element={<CouponScreen />} />
+            <Route path='settings' element={<Settings />} />
           </Route>
-          <Route path='new' element={<CreateCoupon />} />
-          <Route path='coupon' element={<CouponScreen />} />
-          <Route path='settings' element={<Settings />} />
         </Route>
 
         {/* Catch all */}
@@ -61,6 +64,8 @@ function App() {
 }
 
 export default App;
+
+
 
 
 

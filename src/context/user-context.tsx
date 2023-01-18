@@ -136,16 +136,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     linkUser,
     unlinkUser,
     userDocRef,
-    // couponsReceived: query(
-    //   collection(db, "coupons"),
-    //   where("to", "==", user?.uid)
-    //   orderBy("createdAt", "desc")
-    // ),
-    // couponsGivenRef: query(
-    //   collection(db, "coupons"),
-    //   where("from", "==", user.uid),
-    //   orderBy("createdAt", "desc")
-    // ),
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

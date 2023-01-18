@@ -10,28 +10,29 @@ import "react-toastify/dist/ReactToastify.css";
 import { UserProvider } from "./context/user-context";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  // <React.StrictMode>
-  <BrowserRouter>
-    <AuthProvider>
-      <UserProvider>
-        <ToastContainer
-          position='top-center'
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme='light'
-        />
-        <App />
-      </UserProvider>
-    </AuthProvider>
-  </BrowserRouter>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <UserProvider>
+          <ToastContainer
+            position='top-center'
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme='light'
+          />
+          <App />
+        </UserProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
+
 
 
 

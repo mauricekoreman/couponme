@@ -1,16 +1,15 @@
-interface ISticker {
+interface ISticker extends React.HTMLAttributes<HTMLDivElement> {
   stickerURI: string;
-  imageSize?: string;
+  scale?: number;
+  className?: string;
 }
 
-export const Sticker = ({ stickerURI, imageSize = "10rem" }: ISticker) => (
-  <div className='flex items-center justify-center self-center relative'>
-    <div className='bg-[#FFE4E4] rounded-full' style={{ height: "8rem", width: "8rem" }} />
-    <img
-      src={stickerURI}
-      style={{ height: imageSize, width: imageSize, objectFit: "contain" }}
-      className='absolute'
-    />
+export const Sticker = ({ stickerURI, scale = 1, className }: ISticker) => (
+  <div
+    className={`relative flex justify-center items-center ${className}`}
+    style={{ transform: `scale(${scale})` }}
+  >
+    <div className='bg-[#FFE4E4] rounded-full h-44 w-44' />
+    <img src={stickerURI} className='absolute object-contain w-64 h-64' />
   </div>
 );
-
