@@ -44,6 +44,7 @@ interface ICouponContext {
     quantity: number;
   }) => Promise<void>;
   modifiedCoupon: ICoupon;
+  isCouponExpired: ({ couponId, date }: { couponId: string; date: Date }) => Promise<void>;
 }
 
 const CouponContext = createContext({} as ICouponContext);
@@ -136,6 +137,15 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }
 
+  async function isCouponExpired({ couponId, date }: { couponId: string; date: Date }) {
+    const today = new Date();
+    const differenceInTime = date.getTime() - today.getTime();
+
+    if (differenceInTime < 0) {
+      await updateCoupon({ couponId, updatedData: { stauts: couponStatusEnum.EXPIRED } });
+    }
+  }
+
   async function handleConfirmUsed({
     couponId,
     used,
@@ -173,6 +183,7 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     updateCoupon,
     handleConfirmUsed,
     modifiedCoupon,
+    isCouponExpired,
   };
 
   return <CouponContext.Provider value={value}>{!!user && children}</CouponContext.Provider>;
@@ -181,6 +192,16 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 export const useCoupons = () => {
   return useContext(CouponContext);
 };
+
+
+
+
+
+
+
+
+
+
 
 
 
