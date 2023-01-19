@@ -142,7 +142,7 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const differenceInTime = date.getTime() - today.getTime();
 
     if (differenceInTime < 0) {
-      await updateCoupon({ couponId, updatedData: { stauts: couponStatusEnum.EXPIRED } });
+      await updateCoupon({ couponId, updatedData: { status: couponStatusEnum.EXPIRED } });
     }
   }
 
@@ -192,6 +192,9 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 export const useCoupons = () => {
   return useContext(CouponContext);
 };
+
+
+
 
 
 
