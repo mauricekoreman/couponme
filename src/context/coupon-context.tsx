@@ -33,7 +33,7 @@ interface ICouponContext {
   givenCoupons: ICoupon[];
   pendingCoupons: ICoupon[];
   deleteCoupon: ({ couponId }: { couponId: string }) => Promise<void>;
-  handleUseCoupon: ({ couponId }: { couponId: string }) => Promise<void>;
+  updateCoupon: ({ couponId }: { couponId: string; updatedData: {} }) => Promise<void>;
   handleConfirmUsed: ({
     couponId,
     used,
@@ -122,10 +122,10 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }
 
-  async function handleUseCoupon({ couponId }: { couponId: string }) {
+  async function updateCoupon({ couponId, updatedData }: { couponId: string; updatedData: {} }) {
     try {
       const couponRef = await getCouponRef(couponId);
-      const updated = await updateDoc(couponRef, { status: couponStatusEnum.PENDING });
+      const updated = await updateDoc(couponRef, updatedData);
 
       return updated;
     } catch (error) {
@@ -135,15 +135,6 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
     }
   }
-
-  // async function getCoupon({ couponId }: { couponId: string }) {
-  //   try {
-  //     const couponRef = await getCouponRef(couponId);
-  //     const coupon = await doc
-  //   } catch (error) {
-
-  //   }
-  // }
 
   async function handleConfirmUsed({
     couponId,
@@ -160,10 +151,9 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
       if (newUsedAmount === quantity) status = couponStatusEnum.FINISHED;
 
-      const couponRef = await getCouponRef(couponId);
-      const updated = await updateDoc(couponRef, {
-        status: status,
-        used: newUsedAmount,
+      const updated = updateCoupon({
+        couponId: couponId,
+        updatedData: { status: status, used: newUsedAmount },
       });
 
       return updated;
@@ -180,7 +170,7 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     givenCoupons,
     pendingCoupons,
     deleteCoupon,
-    handleUseCoupon,
+    updateCoupon,
     handleConfirmUsed,
     modifiedCoupon,
   };
@@ -191,3 +181,6 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 export const useCoupons = () => {
   return useContext(CouponContext);
 };
+
+
+

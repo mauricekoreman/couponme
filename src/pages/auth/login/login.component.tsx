@@ -16,12 +16,7 @@ export const Login = () => {
     e.preventDefault();
 
     if (emailRef.current?.value !== undefined && passwordRef.current?.value !== undefined) {
-      await signIn({ email: emailRef.current.value, password: passwordRef.current.value }).catch(
-        (err) => {
-          const message = err.message.replace("Firebase: ", "");
-          toast.error(message);
-        }
-      );
+      await signIn({ email: emailRef.current.value, password: passwordRef.current.value });
     }
   };
 
@@ -42,3 +37,4 @@ export const Login = () => {
     </div>
   );
 };
+

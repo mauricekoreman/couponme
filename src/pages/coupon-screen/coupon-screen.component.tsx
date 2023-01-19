@@ -17,7 +17,7 @@ export const enum couponStatusEnum {
 
 export const CouponScreen = () => {
   const { user } = useAuth();
-  const { deleteCoupon, handleConfirmUsed, handleUseCoupon, modifiedCoupon } = useCoupons();
+  const { deleteCoupon, handleConfirmUsed, updateCoupon, modifiedCoupon } = useCoupons();
   const { userData } = useUser();
   const { state } = useLocation();
   const [couponData, setCouponData] = useState<ICouponData>(state.couponData);
@@ -83,10 +83,15 @@ export const CouponScreen = () => {
         onClick={() =>
           from === user?.uid
             ? handleConfirmUsed({ couponId: state.couponId, quantity, used })
-            : handleUseCoupon({ couponId: state.couponId })
+            : updateCoupon({
+                couponId: state.couponId,
+                updatedData: { status: couponStatusEnum.PENDING },
+              })
         }
         className='absolute bottom-4 w-[calc(100%_-_2rem)]'
       />
     </div>
   );
 };
+
+

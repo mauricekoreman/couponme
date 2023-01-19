@@ -35,9 +35,6 @@ export const Register = () => {
       email: emailRef.current.value,
       password: passwordRef.current.value,
       name: nameRef.current.value,
-    }).catch((err) => {
-      const message = err.message.replace("Firebase: ", "");
-      toast.error(message);
     });
   };
 
@@ -61,3 +58,4 @@ export const Register = () => {
     </div>
   );
 };
+

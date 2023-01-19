@@ -11,6 +11,7 @@ import {
 import { auth, db } from "../firebase/firebase.config";
 import { doc, setDoc } from "firebase/firestore";
 import { generateRandom } from "../utils/generate-random";
+import { toast } from "react-toastify";
 
 interface ISignIn {
   email: string;
@@ -48,18 +49,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   async function signIn({ email, password }: ISignIn) {
-    return signInWithEmailAndPassword(auth, email, password);
+    try {
+      return signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      if (error instanceof Error) {
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
+      }
+    }
   }
 
   async function createUser({ email, password, name }: IRegister) {
-    return createUserWithEmailAndPassword(auth, email, password).then(async (user) => {
-      await setDoc(doc(db, "users", user.user.uid), {
+    try {
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      return await setDoc(doc(db, "users", user.user.uid), {
         email,
         name,
         linked: null,
         code: generateRandom(6),
       });
-    });
+    } catch (error) {
+      if (error instanceof Error) {
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
+      }
+    }
   }
 
   function signOut() {
@@ -92,3 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   return useContext(AuthContext);
 };
+
+
+
+

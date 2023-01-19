@@ -10,7 +10,7 @@ export const GivenCoupons = () => {
   const { givenCoupons, pendingCoupons } = useCoupons();
 
   return (
-    <div>
+    <div className='pb-20'>
       <DropDown
         data={pendingCoupons}
         defaultOpen={pendingCoupons.length > 0}
@@ -20,8 +20,13 @@ export const GivenCoupons = () => {
       <PrimaryButton
         title='Give new coupon'
         onClick={() => navigate("/new")}
-        className='absolute bottom-4 w-[calc(100%_-_2rem)]'
+        className='fixed bottom-4 w-[calc(100%_-_2rem)]'
       />
     </div>
   );
 };
+
+
+
+
+

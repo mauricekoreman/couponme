@@ -15,6 +15,7 @@ import { createCoupon, getStickers } from "../../firebase/firebase.queries";
 import { SecondaryButton } from "../../components/buttons/square-button/square-button.component";
 import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
 import { couponStatusEnum } from "../coupon-screen/coupon-screen.component";
+import { Textarea } from "../../components/input/textarea.component";
 
 export const CreateCoupon = () => {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ export const CreateCoupon = () => {
   const navigate = useNavigate();
 
   const titleRef = useRef<HTMLInputElement>(null);
-  const descriptionRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [quantityCount, setQuantityCount] = useState(1);
   const [selectedColor, setSelectedColor] = useState(colors.blue);
   const [sticker, setSticker] = useState<string | null>(null);
@@ -98,13 +99,21 @@ export const CreateCoupon = () => {
     <div>
       <Navbar navbarTitle='New coupon' withBackButton />
       <form className='px-4 py-7' onSubmit={handleSubmit}>
-        <Input ref={titleRef} label='Title*' placeholder='Title' type={"text"} name='title' />
         <Input
-          ref={descriptionRef}
-          label='Description*'
-          placeholder='Description'
+          ref={titleRef}
+          label='Title*'
+          placeholder='Title'
           type={"text"}
+          name='title'
+          maxLength={35}
+        />
+        <Textarea
+          ref={descriptionRef}
+          label='Description'
+          placeholder='Description'
           name='description'
+          maxLength={120}
+          rows={4}
         />
 
         <div className='mb-5'>
@@ -198,4 +207,16 @@ export const CreateCoupon = () => {
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
 
