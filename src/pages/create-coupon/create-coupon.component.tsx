@@ -2,7 +2,7 @@ import { colors } from "./colors";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { DocumentData } from "firebase/firestore";
-import { formatDate } from "../../utils/formatDate";
+import { inputDateString, localDateString } from "../../utils/formatDate";
 import { useUser } from "../../context/user-context";
 import { useAuth } from "../../context/auth-context";
 import { FiCalendar, FiMinus, FiPlus } from "react-icons/fi";
@@ -62,11 +62,11 @@ export const CreateCoupon = () => {
         color: selectedColor,
         sticker: sticker,
         used: 0,
-        expirationDate: dateRef.current.value,
+        expirationDate: new Date(dateRef.current.value).toISOString(),
         status: couponStatusEnum.IDLE,
         to: userData!.linked,
         from: user!.uid,
-        createdAt: formatDate(new Date()),
+        createdAt: new Date().toISOString(),
       };
 
       const couponRef = await createCoupon(couponData);
@@ -136,8 +136,7 @@ export const CreateCoupon = () => {
               onFocus={() => dateRef.current?.showPicker()}
               name='date'
               type='date'
-              min={formatDate(new Date())}
-              defaultValue={formatDate(standardExpirationDate)}
+              min={inputDateString(new Date())}
               className={`${standardText} bg-offwhite border-0 outline-black p-0 m-0`}
             />
           </div>
@@ -207,6 +206,17 @@ export const CreateCoupon = () => {
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
 
 
 
