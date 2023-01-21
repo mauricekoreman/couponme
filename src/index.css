@@ -48,4 +48,17 @@
   input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
   }
+
+  input,
+  textarea,
+  button,
+  select,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:active,
+  a:active {
+    opacity: 0.5;
+  }
 }

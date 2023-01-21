@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Coupon } from "../../components/coupon/coupon.component";
 import { Navbar } from "../../components/navbars/navbar.component";
 import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
@@ -20,6 +20,7 @@ export const CouponScreen = () => {
   const { deleteCoupon, handleConfirmUsed, updateCoupon, modifiedCoupon } = useCoupons();
   const { userData } = useUser();
   const { state } = useLocation();
+  const navigate = useNavigate();
   const [couponData, setCouponData] = useState<ICouponData>(state.couponData);
   const { from, quantity, status, sticker, used } = couponData;
 
@@ -59,7 +60,7 @@ export const CouponScreen = () => {
     if (status === couponStatusEnum.FINISHED || status === couponStatusEnum.EXPIRED) {
       return (
         <button
-          onClick={() => deleteCoupon({ couponId: state.couponId })}
+          onClick={() => deleteCoupon({ couponId: state.couponId }).then(() => navigate(-1))}
           className='text-red font-regularMedium text-base text-center block mx-auto'
         >
           Delete coupon
@@ -93,5 +94,4 @@ export const CouponScreen = () => {
     </div>
   );
 };
-
 

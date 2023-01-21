@@ -2,6 +2,7 @@ import {
   DocumentData,
   DocumentReference,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -13,6 +14,8 @@ import {
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../firebase/firebase.config";
 import { useAuth } from "./auth-context";
+import { getCouponsGivenQuery, getCouponsReceivedQuery } from "../firebase/firebase.queries";
+import { toast } from "react-toastify";
 
 interface IUserContext {
   userData: DocumentData | undefined;
@@ -108,15 +111,35 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // unlink two users.
   async function unlinkUser() {
-    // update the document of the current user
-    await updateUserData({ linked: null, linkedUserName: null });
+    if (!user) return;
+    try {
+      // update the document of the current user
+      await updateUserData({ linked: null, linkedUserName: null });
 
-    // update the document of the linked user
-    await updateLinkedUserData({ linked: null, linkedUserName: null });
+      // update the document of the linked user
+      await updateLinkedUserData({ linked: null, linkedUserName: null });
 
-    // TODO NOTE
-    // delete all coupons that were given and received by these users
-    // await deleteUserCoupons();
+      // delete all coupons that were given and received by these users
+      // NOTE: we can't call a deleteAll from coupons-context because it is BELOW this context.
+      const couponIds: string[] = [];
+
+      // get the documents the current user has created and received.
+      const couponsGiven = await getDocs(getCouponsGivenQuery(user.uid));
+      const couponsReceived = await getDocs(getCouponsReceivedQuery(user.uid));
+
+      // push all ids in arr to get reference
+      [couponsGiven, couponsReceived].forEach((docs) =>
+        docs.forEach((coupon) => couponIds.push(coupon.id))
+      );
+
+      // delete all user given and received coupons
+      couponIds.forEach(async (id) => await deleteDoc(doc(db, "coupons", id)));
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error);
+        toast.error(error.message);
+      }
+    }
   }
 
   useEffect(() => {
@@ -144,3 +167,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useUser = () => {
   return useContext(UserContext);
 };
+
+
+
+
+
+

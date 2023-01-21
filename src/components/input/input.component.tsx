@@ -19,7 +19,7 @@ export const Input = forwardRef<Ref, IInput>((props, ref) => {
       </label>
       <input
         ref={ref}
-        className='font-regularMedium text-lg w-full px-5 py-3 drop-shadow-brutal rounded-md border-2 border-solid border-black mb-5 focus:outline-none'
+        className={`font-regularMedium text-lg w-full px-5 py-3 drop-shadow-brutal rounded-md border-2 border-solid border-black mb-5 focus:outline-none disabled:bg-white disabled:opacity-60`}
         value={value}
         name={name}
         type={type}
@@ -29,4 +29,14 @@ export const Input = forwardRef<Ref, IInput>((props, ref) => {
     </div>
   );
 });
+
+
+
+
+
+
+
+
+
+
 

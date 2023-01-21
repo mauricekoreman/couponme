@@ -22,14 +22,24 @@ export const ReceivedCoupons = () => {
       ))}
     </div>
   ) : (
-    <div>
+    <div className={"flex flex-col gap-4 justify-center items-center mt-10"}>
       <img
         src='https://firebasestorage.googleapis.com/v0/b/couponet-c8c94.appspot.com/o/cat-stickers%2Fpurr-costume-party.webp?alt=media&token=46be27c0-a61d-4d9e-b86d-c20e50bad4d2'
         alt='Cat with wizard hat'
       />
-      <h2 className='font-displayRegular text-xl text-center mt-4'>
+      <h2 className='font-displayRegular text-xl text-center'>
         You have no coupons from {userData?.linkedUserName} yet!
       </h2>
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
