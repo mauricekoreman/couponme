@@ -10,13 +10,19 @@ import { TextButton } from "../../components/buttons/text-button/text-button.com
 import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
 
 export const Settings = () => {
-  const { userData } = useUser();
   const navigate = useNavigate();
   const { signOut, user, resetPassword } = useAuth();
+  const { userData, unlinkUser } = useUser();
   const nameRef = useRef<HTMLInputElement>(null);
+  const [popupOpen, setPopupOpen] = useState<boolean>(false);
   const [popupDetails, setPopupDetails] = useState<IPopup>({} as IPopup);
 
   function saveChanges() {}
+
+  function togglePopup({ title, onClick }: IPopup) {
+    setPopupOpen(true);
+    setPopupDetails({ title, onClick });
+  }
 
   return (
     <div className='px-4 pb-32 min-h-screen relative flex flex-col items-center'>
@@ -48,19 +54,16 @@ export const Settings = () => {
         icon={<FiLogOut size={"1.5rem"} />}
         className={"mb-4"}
         withNavigateButton={false}
-        onClick={() =>
-          setPopupDetails({ title: "Do you wish to logout?", onClick: signOut, open: true })
-        }
+        onClick={() => togglePopup({ title: "Do you wish to logout?", onClick: signOut })}
       />
       <TextButton
         title={`Unlink with ${userData?.linkedUserName}`}
         icon={<FiLink size={"1.5rem"} />}
         subtext='After unlinking you will lose your coupons and need to link with someone else to use the app again'
         onClick={() =>
-          setPopupDetails({
+          togglePopup({
             title: "Are you sure you want to unlink?",
-            onClick: signOut,
-            open: true,
+            onClick: unlinkUser,
           })
         }
       />
@@ -71,7 +74,9 @@ export const Settings = () => {
         type='button'
         onClick={saveChanges}
       />
-      <Popup title={popupDetails.title} onClick={popupDetails.onClick} open={popupDetails.open} />
+      {popupOpen ? (
+        <Popup title={popupDetails.title} onClick={popupDetails.onClick} key={popupDetails.title} />
+      ) : null}
     </div>
   );
 };
