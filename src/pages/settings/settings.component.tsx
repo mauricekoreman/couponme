@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth-context";
 import { useUser } from "../../context/user-context";
@@ -9,9 +9,14 @@ import { IPopup, Popup } from "../../components/popup/popup.component";
 import { TextButton } from "../../components/buttons/text-button/text-button.component";
 import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
 
+interface ITogglePopup {
+  title: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
 export const Settings = () => {
   const navigate = useNavigate();
-  const { signOut, user, resetPassword } = useAuth();
+  const { signOut, user } = useAuth();
   const { userData, unlinkUser } = useUser();
   const nameRef = useRef<HTMLInputElement>(null);
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
@@ -19,9 +24,9 @@ export const Settings = () => {
 
   function saveChanges() {}
 
-  function togglePopup({ title, onClick }: IPopup) {
+  function togglePopup({ title, onClick }: ITogglePopup) {
     setPopupOpen(true);
-    setPopupDetails({ title, onClick });
+    setPopupDetails({ title, onClick, close: () => setPopupOpen(false) });
   }
 
   return (
@@ -75,7 +80,12 @@ export const Settings = () => {
         onClick={saveChanges}
       />
       {popupOpen ? (
-        <Popup title={popupDetails.title} onClick={popupDetails.onClick} key={popupDetails.title} />
+        <Popup
+          title={popupDetails.title}
+          onClick={popupDetails.onClick}
+          key={popupDetails.title}
+          close={popupDetails.close}
+        />
       ) : null}
     </div>
   );

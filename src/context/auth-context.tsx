@@ -102,7 +102,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error("There is no user data...");
       }
 
-      return await updatePassword(auth.currentUser, newPassword);
+      const message = await updatePassword(auth.currentUser, newPassword);
+      return message;
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);

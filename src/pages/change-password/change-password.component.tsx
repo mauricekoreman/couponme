@@ -25,17 +25,20 @@ export const ChangePassword = () => {
       return;
     }
 
+    setLoading(true);
+
     reauthenticate({
       email: emailRef.current.value,
       password: currentPasswordRef.current.value,
-    }).then(() => console.log("still here!"));
-
-    // .then(() =>
-    //   updatePasswordFn({ newPassword: newPasswordRef.current!.value }).then(() => {
-    //     toast.success("Your password has been updated!");
-    //     setLoading(false);
-    //   })
-    // )
+    })
+      .then((userCredential) => {
+        if (userCredential) {
+          updatePasswordFn({ newPassword: newPasswordRef.current!.value }).then(() => {
+            toast.success("Your password has been updated!");
+          });
+        }
+      })
+      .finally(() => setLoading(false));
   }
 
   return (
