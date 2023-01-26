@@ -1,16 +1,18 @@
-import { FiKey, FiLink, FiLogOut, FiTrash2 } from "react-icons/fi";
-import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
-import { TextButton } from "../../components/buttons/text-button/text-button.component";
-import { Input } from "../../components/input/input.component";
-import { Navbar } from "../../components/navbars/navbar.component";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth-context";
 import { useUser } from "../../context/user-context";
-import React, { useRef, useState } from "react";
+import { Input } from "../../components/input/input.component";
+import { FiKey, FiLink, FiLogOut, FiTrash2 } from "react-icons/fi";
+import { Navbar } from "../../components/navbars/navbar.component";
 import { IPopup, Popup } from "../../components/popup/popup.component";
+import { TextButton } from "../../components/buttons/text-button/text-button.component";
+import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
 
 export const Settings = () => {
   const { userData } = useUser();
-  const { signOut, user } = useAuth();
+  const navigate = useNavigate();
+  const { signOut, user, resetPassword } = useAuth();
   const nameRef = useRef<HTMLInputElement>(null);
   const [popupDetails, setPopupDetails] = useState<IPopup>({} as IPopup);
 
@@ -39,6 +41,7 @@ export const Settings = () => {
         title='Change password'
         icon={<FiKey size={"1.5rem"} />}
         className={"mb-4 mt-10"}
+        onClick={() => navigate("change-password")}
       />
       <TextButton
         title='Logout'
@@ -72,4 +75,3 @@ export const Settings = () => {
     </div>
   );
 };
-

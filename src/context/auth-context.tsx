@@ -1,12 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
+  EmailAuthProvider,
   User,
   UserCredential,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  reauthenticateWithCredential,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  updateEmail,
+  updatePassword,
 } from "firebase/auth";
 import { auth, db } from "../firebase/firebase.config";
 import { doc, setDoc } from "firebase/firestore";
@@ -30,8 +32,14 @@ interface IAuthContext {
   signIn: ({ email, password }: ISignIn) => Promise<void | UserCredential>;
   createUser: ({ email, password }: IRegister) => Promise<void | UserCredential>;
   signOut: () => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
-  changeEmail: (newEmail: string) => Promise<void> | undefined;
+  resetPassword: ({ email }: { email: string }) => Promise<void>;
+  updatePasswordFn: ({ newPassword }: { newPassword: string }) => Promise<void>;
+  reauthenticate: ({
+    email,
+    password,
+  }: {
+    [key: string]: string;
+  }) => Promise<UserCredential | undefined>;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
@@ -80,13 +88,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return auth.signOut();
   }
 
-  function resetPassword(email: string) {
-    return sendPasswordResetEmail(auth, email);
+  async function resetPassword({ email }: { email: string }) {
+    await sendPasswordResetEmail(auth, email)
+      .then(() => toast.success(`A password reset email has been sent to ${email}!`))
+      .catch((error) => {
+        toast.error(error.message);
+      });
   }
 
-  function changeEmail(newEmail: string) {
-    if (user) {
-      return updateEmail(user, newEmail);
+  async function updatePasswordFn({ newPassword }: { newPassword: string }) {
+    try {
+      if (!auth.currentUser) {
+        throw new Error("There is no user data...");
+      }
+
+      return await updatePassword(auth.currentUser, newPassword);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error);
+        toast.error(error.message);
+      }
+    }
+  }
+
+  async function reauthenticate({ email, password }: { [key: string]: string }) {
+    try {
+      if (!auth.currentUser) {
+        throw new Error("There is no user data...");
+      }
+
+      const credential = EmailAuthProvider.credential(email, password);
+      const authenticated = await reauthenticateWithCredential(auth.currentUser, credential);
+
+      return authenticated;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error);
+        toast.error(error.message);
+      }
     }
   }
 
@@ -97,7 +136,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     createUser,
     signOut,
     resetPassword,
-    changeEmail,
+    updatePasswordFn,
+    reauthenticate,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
