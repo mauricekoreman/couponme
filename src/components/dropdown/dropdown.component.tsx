@@ -29,7 +29,7 @@ export const DropDown = <T extends DocumentData[]>({
       </div>
       <div className='flex flex-col'>
         {open &&
-          data.map((item) => (
+          data?.map((item) => (
             <div
               key={item.id}
               onClick={() =>

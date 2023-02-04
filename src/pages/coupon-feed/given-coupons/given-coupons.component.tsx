@@ -13,8 +13,8 @@ export const GivenCoupons = () => {
     <div className='pb-20'>
       <DropDown
         data={pendingCoupons}
-        defaultOpen={pendingCoupons.length > 0}
-        text={`Coupons used by ${userData?.linkedUserName} (${pendingCoupons.length})`}
+        defaultOpen={pendingCoupons?.length > 0}
+        text={`Coupons used by ${userData?.linkedUserName} (${pendingCoupons?.length ?? 0})`}
       />
       <DropDown data={givenCoupons} text={"All coupons given"} />
       <PrimaryButton

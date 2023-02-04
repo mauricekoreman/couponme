@@ -31,9 +31,9 @@ export const ChangePassword = () => {
       email: emailRef.current.value,
       password: currentPasswordRef.current.value,
     })
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         if (userCredential) {
-          updatePasswordFn({ newPassword: newPasswordRef.current!.value }).then(() => {
+          await updatePasswordFn({ newPassword: newPasswordRef.current!.value }).then(() => {
             toast.success("Your password has been updated!");
           });
         }

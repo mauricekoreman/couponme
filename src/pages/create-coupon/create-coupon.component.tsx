@@ -105,7 +105,7 @@ export const CreateCoupon = () => {
           placeholder='Title'
           type={"text"}
           name='title'
-          maxLength={35}
+          maxLength={26}
         />
         <Textarea
           ref={descriptionRef}

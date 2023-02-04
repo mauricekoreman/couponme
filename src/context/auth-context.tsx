@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   async function signIn({ email, password }: ISignIn) {
     try {
-      return signInWithEmailAndPassword(auth, email, password);
+      return await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       if (error instanceof Error) {
         const message = error.message.replace("Firebase: ", "");

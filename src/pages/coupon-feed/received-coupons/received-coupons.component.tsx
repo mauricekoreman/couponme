@@ -8,7 +8,7 @@ export const ReceivedCoupons = () => {
   const { receivedCoupons } = useCoupons();
   const navigate = useNavigate();
 
-  return receivedCoupons.length > 0 ? (
+  return receivedCoupons?.length > 0 ? (
     <div>
       {receivedCoupons.map((coupon) => (
         <div
