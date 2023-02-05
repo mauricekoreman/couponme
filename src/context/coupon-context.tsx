@@ -8,6 +8,7 @@ import {
 } from "../firebase/firebase.queries";
 import { toast } from "react-toastify";
 import { couponStatusEnum } from "../pages/coupon-screen/coupon-screen.component";
+import { useUser } from "./user-context";
 
 export interface ICouponData {
   color: string;
@@ -51,6 +52,7 @@ const CouponContext = createContext({} as ICouponContext);
 
 export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
+  const { userDocRef, updateUserData } = useUser();
 
   const [receivedCoupons, setReceivedCoupons] = useState<ICoupon[]>([]);
   const [givenCoupons, setGivenCoupons] = useState<ICoupon[]>([]);
@@ -104,6 +106,17 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return unsubscribe;
   }, []);
 
+  // create a subscription that listens to userData.linked firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(userDocRef, (doc) => {
+      if (doc.data()?.linked || doc.data()?.linked === null) {
+        updateUserData(doc.data()!);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
   // Copying the given coupons with status "pending" into pendingCoupons state.
   useEffect(() => {
     setPendingCoupons(givenCoupons.filter((coupon) => coupon.data.status === "pending"));
@@ -118,7 +131,8 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);
-        toast.error(error.message);
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
       }
     }
   }
@@ -132,7 +146,8 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);
-        toast.error(error.message);
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
       }
     }
   }

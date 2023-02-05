@@ -8,13 +8,14 @@ import { Settings } from "./pages/settings/settings.component";
 import { NotFound } from "./pages/not-found/not-found.component";
 import { Register } from "./pages/auth/register/register.component";
 import { LinkUser } from "./pages/auth/link-user/link-user.component";
+import { DeleteUser } from "./pages/delete-user/delete-user.component";
 import { CouponScreen } from "./pages/coupon-screen/coupon-screen.component";
 import { CreateCoupon } from "./pages/create-coupon/create-coupon.component";
 import { ProtectedRoute } from "./components/protected-route/protected-route";
-import { CouponFeedLayout } from "./pages/coupon-feed/coupon-feed-layout/coupon-feed-layout.component";
+import { ChangePassword } from "./pages/change-password/change-password.component";
 import { GivenCoupons } from "./pages/coupon-feed/given-coupons/given-coupons.component";
 import { ReceivedCoupons } from "./pages/coupon-feed/received-coupons/received-coupons.component";
-import { ChangePassword } from "./pages/change-password/change-password.component";
+import { CouponFeedLayout } from "./pages/coupon-feed/coupon-feed-layout/coupon-feed-layout.component";
 
 function App() {
   const { userLoaded, user } = useAuth();
@@ -55,6 +56,7 @@ function App() {
             <Route path='coupon' element={<CouponScreen />} />
             <Route path='settings' element={<Settings />} />
             <Route path='settings/change-password' element={<ChangePassword />} />
+            <Route path='settings/delete-user' element={<DeleteUser />} />
           </Route>
         </Route>
 
@@ -66,6 +68,10 @@ function App() {
 }
 
 export default App;
+
+
+
+
 
 
 

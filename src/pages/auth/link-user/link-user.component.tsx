@@ -5,7 +5,6 @@ import { AuthHeading } from "../../../components/auth-heading/auth-heading.compo
 import { PrimaryButton } from "../../../components/buttons/primary-button/primary-button.component";
 import { FiArrowLeft } from "react-icons/fi";
 import { useAuth } from "../../../context/auth-context";
-import { toast } from "react-toastify";
 import { onSnapshot } from "firebase/firestore";
 
 export const LinkUser = () => {
@@ -15,9 +14,7 @@ export const LinkUser = () => {
 
   async function handleSubmit() {
     if (!codeRef.current) return;
-    await linkUser(codeRef.current.value).catch((error) => {
-      toast.error(error.message);
-    });
+    await linkUser(codeRef.current.value);
   }
 
   // create a subscription that listens to userData.linked firestore

@@ -72,7 +72,12 @@ export const Settings = () => {
           })
         }
       />
-      <TextButton title='Delete account' icon={<FiTrash2 size={"1.5rem"} />} className='text-red' />
+      <TextButton
+        title='Delete account'
+        icon={<FiTrash2 size={"1.5rem"} />}
+        className='text-red'
+        onClick={() => navigate("delete-user")}
+      />
       <PrimaryButton
         className='absolute bottom-4 w-[calc(100%_-_2rem)]'
         title='Save changes'

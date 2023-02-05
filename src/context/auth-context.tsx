@@ -4,6 +4,7 @@ import {
   User,
   UserCredential,
   createUserWithEmailAndPassword,
+  deleteUser,
   onAuthStateChanged,
   reauthenticateWithCredential,
   sendPasswordResetEmail,
@@ -11,9 +12,10 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { auth, db } from "../firebase/firebase.config";
-import { doc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { generateRandom } from "../utils/generate-random";
 import { toast } from "react-toastify";
+import { deleteCoupons } from "../firebase/firebase.functions";
 
 interface ISignIn {
   email: string;
@@ -38,8 +40,10 @@ interface IAuthContext {
     email,
     password,
   }: {
-    [key: string]: string;
+    email: string;
+    password: string;
   }) => Promise<UserCredential | undefined>;
+  deleteAccount: ({ linkedUserId }: { linkedUserId: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
@@ -92,7 +96,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await sendPasswordResetEmail(auth, email)
       .then(() => toast.success(`A password reset email has been sent to ${email}!`))
       .catch((error) => {
-        toast.error(error.message);
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
       });
   }
 
@@ -107,7 +112,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);
-        toast.error(error.message);
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
       }
     }
   }
@@ -125,7 +131,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);
-        toast.error(error.message);
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
+      }
+    }
+  }
+
+  async function deleteAccount({ linkedUserId }: { linkedUserId: string }) {
+    try {
+      if (!auth.currentUser || !user) {
+        throw new Error("There is no user data...");
+      }
+
+      // delete the coupons the current user gave and received
+      deleteCoupons({ userId: user.uid });
+
+      // deleteDoc of user entry
+      deleteDoc(doc(db, "users", user.uid));
+
+      // unlink user
+      if (linkedUserId) {
+        const linkedUserDocRef = doc(db, "users", linkedUserId);
+        await updateDoc(linkedUserDocRef, { linked: null, linkedUserName: null });
+      }
+
+      // delete user
+      deleteUser(user);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error);
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
       }
     }
   }
@@ -139,6 +175,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     resetPassword,
     updatePasswordFn,
     reauthenticate,
+    deleteAccount,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

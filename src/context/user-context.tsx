@@ -6,6 +6,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   orderBy,
   query,
   updateDoc,
@@ -16,6 +17,7 @@ import { db } from "../firebase/firebase.config";
 import { useAuth } from "./auth-context";
 import { getCouponsGivenQuery, getCouponsReceivedQuery } from "../firebase/firebase.queries";
 import { toast } from "react-toastify";
+import { deleteCoupons } from "../firebase/firebase.functions";
 
 interface IUserContext {
   userData: DocumentData | undefined;
@@ -58,7 +60,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }));
       })
       .catch((error) => {
-        throw new Error(error);
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
       });
   }
 
@@ -66,37 +69,44 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   async function linkUser(code: string) {
     if (!userData || !user) return;
 
-    // check users links himself
-    if (code === userData.code) {
-      throw new Error("Fill in the code of another user!");
+    try {
+      // check users links himself
+      if (code === userData.code) {
+        throw new Error("Fill in the code of another user!");
+      }
+
+      // add email to emailUser.linked
+      const linkedUserQuery = query(
+        collection(db, "users"),
+        where("code", "==", code),
+        where("linked", "==", null)
+      );
+
+      const linkedUserSnap = await getDocs(linkedUserQuery);
+
+      if (linkedUserSnap.size !== 1) {
+        throw new Error("User does not exist");
+      }
+
+      // Get the id and reference
+      const linkedUserId = linkedUserSnap.docs[0].id;
+      const linkedUserName = linkedUserSnap.docs[0].data().name;
+      const linkedUserDocRef = doc(db, "users", linkedUserId);
+
+      // Update the document of the current user
+      await updateUserData({ linked: linkedUserId, linkedUserName: linkedUserName });
+
+      // Update the document of the linked user
+      await updateDoc(linkedUserDocRef, {
+        linked: user.uid,
+        linkedUserName: userData.name,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
+      }
     }
-
-    // add email to emailUser.linked
-    const linkedUserQuery = query(
-      collection(db, "users"),
-      where("code", "==", code),
-      where("linked", "==", null)
-    );
-
-    const linkedUserSnap = await getDocs(linkedUserQuery);
-
-    if (linkedUserSnap.size !== 1) {
-      throw new Error("User does not exist");
-    }
-
-    // Get the id and reference
-    const linkedUserId = linkedUserSnap.docs[0].id;
-    const linkedUserName = linkedUserSnap.docs[0].data().name;
-    const linkedUserDocRef = doc(db, "users", linkedUserId);
-
-    // Update the document of the current user
-    await updateUserData({ linked: linkedUserId, linkedUserName: linkedUserName });
-
-    // Update the document of the linked user
-    await updateDoc(linkedUserDocRef, {
-      linked: user.uid,
-      linkedUserName: userData.name,
-    });
   }
 
   // update the data of a the linked user. (e.g. when the current user changes their name, it should also be updated in the linkedUser document)
@@ -120,24 +130,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await updateLinkedUserData({ linked: null, linkedUserName: null });
 
       // delete all coupons that were given and received by these users
-      // NOTE: we can't call a deleteAll from coupons-context because it is BELOW this context.
-      const couponIds: string[] = [];
-
-      // get the documents the current user has created and received.
-      const couponsGiven = await getDocs(getCouponsGivenQuery(user.uid));
-      const couponsReceived = await getDocs(getCouponsReceivedQuery(user.uid));
-
-      // push all ids in arr to get reference
-      [couponsGiven, couponsReceived].forEach((docs) =>
-        docs.forEach((coupon) => couponIds.push(coupon.id))
-      );
-
-      // delete all user given and received coupons
-      couponIds.forEach(async (id) => await deleteDoc(doc(db, "coupons", id)));
+      deleteCoupons({ userId: user.uid });
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);
-        toast.error(error.message);
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
       }
     }
   }
