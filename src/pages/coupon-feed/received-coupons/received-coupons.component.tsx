@@ -11,14 +11,14 @@ export const ReceivedCoupons = () => {
   return receivedCoupons?.length > 0 ? (
     <div>
       {receivedCoupons.map((coupon) => (
-        <div
-          key={coupon.id}
+        <Coupon
           onClick={() =>
             navigate("/coupon", { state: { couponId: coupon.id, couponData: coupon.data } })
           }
-        >
-          <Coupon id={coupon.id} item={coupon.data as ICouponData} />
-        </div>
+          id={coupon.id}
+          item={coupon.data as ICouponData}
+          key={coupon.id}
+        />
       ))}
     </div>
   ) : (
