@@ -2,28 +2,23 @@ import {
   DocumentData,
   DocumentReference,
   collection,
-  deleteDoc,
   doc,
   getDoc,
   getDocs,
-  onSnapshot,
-  orderBy,
   query,
   updateDoc,
   where,
 } from "firebase/firestore";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { db } from "../firebase/firebase.config";
-import { useAuth } from "./auth-context";
-import { getCouponsGivenQuery, getCouponsReceivedQuery } from "../firebase/firebase.queries";
 import { toast } from "react-toastify";
-import { deleteCoupons } from "../firebase/firebase.functions";
+import { useAuth } from "./auth-context";
+import { db } from "../firebase/firebase.config";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { deleteCoupons, updateLinkedUserData } from "../firebase/firebase.functions";
 
 interface IUserContext {
   userData: DocumentData | undefined;
   userDataLoading: boolean;
   updateUserData: (data: DocumentData) => Promise<void>;
-  updateLinkedUserData: (data: DocumentData) => Promise<void>;
   linkUser: (code: string) => Promise<void>;
   unlinkUser: () => Promise<void>;
   userDocRef: DocumentReference<DocumentData>;
@@ -109,16 +104,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
-  // update the data of a the linked user. (e.g. when the current user changes their name, it should also be updated in the linkedUser document)
-  async function updateLinkedUserData(data: DocumentData) {
-    if (!userData) return;
-
-    const linkedUserDocRef = doc(db, "users", userData.linked);
-
-    // update the document of the linked user
-    await updateDoc(linkedUserDocRef, data);
-  }
-
   // unlink two users.
   async function unlinkUser() {
     if (!user) return;
@@ -127,7 +112,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await updateUserData({ linked: null, linkedUserName: null });
 
       // update the document of the linked user
-      await updateLinkedUserData({ linked: null, linkedUserName: null });
+      await updateLinkedUserData({
+        currentUserData: userData,
+        newUserData: { linked: null, linkedUserName: null },
+      });
 
       // delete all coupons that were given and received by these users
       deleteCoupons({ userId: user.uid });
@@ -153,7 +141,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     userData,
     userDataLoading,
     updateUserData,
-    updateLinkedUserData,
     linkUser,
     unlinkUser,
     userDocRef,

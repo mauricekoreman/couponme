@@ -1,14 +1,14 @@
-import { useAuth } from "./auth-context";
-import { DocumentData, deleteDoc, doc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
-import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   getCouponsReceivedQuery,
   getCouponsGivenQuery,
   getCouponRef,
 } from "../firebase/firebase.queries";
 import { toast } from "react-toastify";
-import { couponStatusEnum } from "../pages/coupon-screen/coupon-screen.component";
+import { useAuth } from "./auth-context";
 import { useUser } from "./user-context";
+import { deleteDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { couponStatusEnum } from "../pages/coupon-screen/coupon-screen.component";
 
 export interface ICouponData {
   color: string;
@@ -207,23 +207,3 @@ export const CouponProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 export const useCoupons = () => {
   return useContext(CouponContext);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
