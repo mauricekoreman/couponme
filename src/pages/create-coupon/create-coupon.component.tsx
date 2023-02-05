@@ -12,7 +12,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { Navbar } from "../../components/navbars/navbar.component";
 import { Sticker } from "../../components/sticker/sticker.component";
 import { createCoupon, getStickers } from "../../firebase/firebase.queries";
-import { SecondaryButton } from "../../components/buttons/square-button/square-button.component";
+import { SecondaryButton } from "../../components/buttons/secondary-button/secondary-button.component";
 import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
 import { couponStatusEnum } from "../coupon-screen/coupon-screen.component";
 import { Textarea } from "../../components/input/textarea.component";
@@ -116,16 +116,16 @@ export const CreateCoupon = () => {
           rows={4}
         />
 
-        <div className='mb-5'>
+        <div className='mb-12'>
           <label className={standardText}>Quantity</label>
-          <div className='flex items-center gap-6 mt-4'>
+          <div className='flex items-center w-36 justify-between mt-4'>
             <SecondaryButton textOrIcon={<FiMinus />} onClick={() => clickButton("subtract")} />
             <p className={standardText}>{quantityCount}</p>
             <SecondaryButton textOrIcon={<FiPlus />} onClick={() => clickButton("add")} />
           </div>
         </div>
 
-        <div className='mb-5'>
+        <div className='mb-12'>
           <label htmlFor='date' className={standardText}>
             Expiration date*
           </label>
@@ -137,13 +137,14 @@ export const CreateCoupon = () => {
               name='date'
               type='date'
               min={inputDateString(new Date())}
-              className={`${standardText} bg-offwhite border-0 outline-black p-0 m-0`}
+              required
+              className={`${standardText} border-0 outline outline-2 rounded-sm bg-offwhite  outline-black p-0 m-0`}
             />
           </div>
         </div>
 
         <div className='mb-14'>
-          <label>Choose a coupon color</label>
+          <label className={standardText}>Choose a coupon color</label>
           <div className='flex flex-row flex-wrap justify-between'>
             {Object.entries(colors).map((color) => (
               <div

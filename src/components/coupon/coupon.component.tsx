@@ -7,9 +7,10 @@ interface ICoupon {
   id: string;
   item: ICouponData;
   withDesc?: boolean;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
-export const Coupon = ({ id, item, withDesc }: ICoupon) => {
+export const Coupon = ({ id, item, withDesc, onClick }: ICoupon) => {
   const { title, quantity, color, expirationDate, description, used, status } = item;
   const { isCouponExpired } = useCoupons();
   const expired = status === couponStatusEnum.FINISHED || status === couponStatusEnum.EXPIRED;
@@ -22,10 +23,14 @@ export const Coupon = ({ id, item, withDesc }: ICoupon) => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-between w-full max-w-md ${
+      className={`flex flex-col items-center justify-between w-full max-w-md px-10 py-3 border-2 rounded-lg drop-shadow-brutal2 mb-3 ${
         withDesc ? "h-fit" : "h-44"
-      } px-10 py-3 border-2 rounded-lg drop-shadow-brutal2 mb-3 ${expired && "opacity-50"}`}
+      } ${expired && "opacity-50"} ${
+        !!onClick &&
+        "cursor-pointer transition duration-75 active:opacity-90 active:drop-shadow-removeBrutal active:translate-y-[2px] active:translate-x-[2px]"
+      }`}
       style={{ backgroundColor: color }}
+      onClick={onClick}
     >
       <p className='font-regularRegular text-sm'>Expires: {localDateString(expirationDate)}</p>
       <h2 className='font-displayBold text-center text-3xl'>{title}</h2>

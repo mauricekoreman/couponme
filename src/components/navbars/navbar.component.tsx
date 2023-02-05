@@ -22,11 +22,17 @@ export const Navbar = ({
         <FiArrowLeft
           onClick={() => navigate(-1)}
           size={"2rem"}
-          className={`absolute left-[1rem]`}
+          className={`absolute left-[1rem] cursor-pointer transition duration-75 active:opacity-70`}
         />
       )}
       {withTitle && <h1 className='font-displayBold text-2xl text-center flex-1'>{navbarTitle}</h1>}
-      {rightIcon && <div className={`absolute right-[1rem]`}>{rightIcon}</div>}
+      {rightIcon && (
+        <div
+          className={`absolute right-[1rem] cursor-pointer transition duration-75 active:opacity-70`}
+        >
+          {rightIcon}
+        </div>
+      )}
     </nav>
   );
 };

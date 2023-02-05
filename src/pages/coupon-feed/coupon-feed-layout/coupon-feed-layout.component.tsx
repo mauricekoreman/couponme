@@ -7,8 +7,10 @@ export const CouponFeedLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const activeClass = "font-displayBold text-lg py-2 w-1/2 text-center border-b-4";
-  const inactiveClass = "font-displayBold text-lg py-2 w-1/2 text-center opacity-70";
+  const activeClass =
+    "font-displayBold text-lg py-2 w-1/2 text-center border-b-4  transition duration-200";
+  const inactiveClass =
+    "font-displayBold text-lg py-2 w-1/2 text-center opacity-70  transition duration-200";
 
   useEffect(() => {
     if (location.pathname === "/") navigate("/received-coupons");

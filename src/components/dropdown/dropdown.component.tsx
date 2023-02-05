@@ -22,7 +22,7 @@ export const DropDown = <T extends DocumentData[]>({
     <div>
       <div
         onClick={() => setOpen((prevState) => !prevState)}
-        className='flex gap-2 items-center mb-3'
+        className='flex gap-2 items-center mb-3 cursor-pointer active:opacity-70'
       >
         <FiChevronRight size={"1.3rem"} className={`${open && "rotate-90"}`} />
         <p className='text-lg font-regularMedium'>{text}</p>
@@ -30,14 +30,14 @@ export const DropDown = <T extends DocumentData[]>({
       <div className='flex flex-col'>
         {open &&
           data?.map((item) => (
-            <div
-              key={item.id}
+            <Coupon
               onClick={() =>
                 navigate("/coupon", { state: { couponId: item.id, couponData: item.data } })
               }
-            >
-              <Coupon item={item.data} id={item.id} key={item.id} />
-            </div>
+              item={item.data}
+              id={item.id}
+              key={item.id}
+            />
           ))}
       </div>
     </div>

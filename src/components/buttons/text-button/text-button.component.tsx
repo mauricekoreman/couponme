@@ -19,7 +19,7 @@ export const TextButton = ({
   ...restProps
 }: ITextButton) => (
   <button
-    className={`font-regularMedium text-xl w-full py-2 ${className}`}
+    className={`font-regularMedium text-xl w-full py-2 transition duration-100 active:opacity-70 ${className}`}
     onClick={onClick}
     {...restProps}
   >
