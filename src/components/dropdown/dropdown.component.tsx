@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 import { DocumentData } from "firebase/firestore";
@@ -7,16 +7,24 @@ import { Coupon } from "../coupon/coupon.component";
 interface IDropDown<T> {
   text: string;
   data: T;
+  name: string;
   defaultOpen?: boolean;
 }
 
 export const DropDown = <T extends DocumentData[]>({
   text,
   data,
+  name,
   defaultOpen = false,
 }: IDropDown<T>) => {
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState<boolean>(
+    JSON.parse(sessionStorage.getItem(name) || "{}") || defaultOpen
+  );
   const navigate = useNavigate();
+
+  useEffect(() => {
+    sessionStorage.setItem(name, JSON.stringify(open));
+  }, [open]);
 
   return (
     <div>

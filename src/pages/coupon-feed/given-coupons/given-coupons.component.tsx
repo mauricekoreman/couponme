@@ -12,11 +12,12 @@ export const GivenCoupons = () => {
   return (
     <div className='pb-20'>
       <DropDown
+        name='dropdown-pending'
         data={pendingCoupons}
         defaultOpen={pendingCoupons?.length > 0}
         text={`Coupons used by ${userData?.linkedUserName} (${pendingCoupons?.length ?? 0})`}
       />
-      <DropDown data={givenCoupons} text={"All coupons given"} />
+      <DropDown name='dropdown-given' data={givenCoupons} text={"All coupons given"} />
       <PrimaryButton
         title='Give new coupon'
         onClick={() => navigate("/new")}
