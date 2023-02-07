@@ -35,9 +35,9 @@ export const DropDown = <T extends DocumentData[]>({
         <FiChevronRight size={"1.3rem"} className={`${open && "rotate-90"}`} />
         <p className='text-lg font-regularMedium'>{text}</p>
       </div>
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
-        {open &&
-          data?.map((item) => (
+      {open && (
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5'>
+          {data?.map((item) => (
             <Coupon
               onClick={() =>
                 navigate("/coupon", { state: { couponId: item.id, couponData: item.data } })
@@ -47,7 +47,8 @@ export const DropDown = <T extends DocumentData[]>({
               key={item.id}
             />
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
