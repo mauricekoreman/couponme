@@ -23,8 +23,8 @@ export const Coupon = ({ id, item, withDesc, onClick }: ICoupon) => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-between w-full max-w-md px-10 py-3 border-2 rounded-lg drop-shadow-brutal2 mb-3 ${
-        withDesc ? "h-fit" : "h-44"
+      className={`flex flex-col items-center justify-between w-full min-w-[280px] px-10 py-3 border-2 rounded-lg drop-shadow-brutal2 ${
+        withDesc ? "min-h-fit h-52" : "h-44"
       } ${expired && "opacity-50"} ${
         !!onClick &&
         "cursor-pointer transition duration-75 active:opacity-90 active:drop-shadow-removeBrutal active:translate-y-[2px] active:translate-x-[2px]"
@@ -51,6 +51,26 @@ export const Coupon = ({ id, item, withDesc, onClick }: ICoupon) => {
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

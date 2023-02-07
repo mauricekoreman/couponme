@@ -9,7 +9,7 @@ export interface IPopup {
 }
 
 export const Popup = ({ title, onClick, close, children }: IPopup) => (
-  <div className='absolute min-h-screen min-w-full flex justify-center items-center bg-black bg-opacity-20'>
+  <div className='absolute min-h-screen top-0 w-screen flex justify-center items-center bg-black bg-opacity-20'>
     <div className='bg-white border-2 rounded-lg drop-shadow-brutal2 -translate-y-14 min-w-[20rem] w-[80%] max-w-[40rem] min-h-fit p-4 '>
       <h1 className='font-displayRegular text-2xl text-center mb-10'>{title}</h1>
       {children}
@@ -20,6 +20,15 @@ export const Popup = ({ title, onClick, close, children }: IPopup) => (
     </div>
   </div>
 );
+
+
+
+
+
+
+
+
+
 
 
 

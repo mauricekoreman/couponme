@@ -6,6 +6,8 @@ interface INavbar {
   withTitle?: boolean;
   withBackButton?: boolean;
   rightIcon?: React.ReactNode;
+  backButtonFunction?: () => void;
+  marginBottom?: number;
 }
 
 export const Navbar = ({
@@ -13,14 +15,19 @@ export const Navbar = ({
   withTitle = true,
   withBackButton = false,
   rightIcon,
+  backButtonFunction,
+  marginBottom = 2,
 }: INavbar) => {
   const navigate = useNavigate();
 
   return (
-    <nav className='h-14 flex space-between items-center'>
+    <nav
+      className='h-14 flex space-between items-center relative'
+      style={{ marginBottom: `${marginBottom}rem` }}
+    >
       {withBackButton && (
         <FiArrowLeft
-          onClick={() => navigate(-1)}
+          onClick={backButtonFunction ? backButtonFunction : () => navigate(-1)}
           size={"2rem"}
           className={`absolute left-[1rem] cursor-pointer transition duration-75 active:opacity-70`}
         />
@@ -36,3 +43,17 @@ export const Navbar = ({
     </nav>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+

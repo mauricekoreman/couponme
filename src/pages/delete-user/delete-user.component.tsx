@@ -36,9 +36,9 @@ export const DeleteUser = () => {
   }
 
   return (
-    <div className='min-h-screen px-4'>
-      <Navbar navbarTitle='Delete user' withBackButton />
-      <form onSubmit={submit}>
+    <div className='min-h-screen max-w-screen-xl mx-auto'>
+      <Navbar navbarTitle='Delete account' withBackButton />
+      <form onSubmit={submit} className='px-4 grid place-items-center'>
         <Input ref={emailRef} label='Email' name='email' placeholder='Email' type='email' />
         <Input
           ref={passwordRef}
@@ -50,7 +50,7 @@ export const DeleteUser = () => {
 
         <PrimaryButton
           className='absolute bottom-4 w-[calc(100%_-_2rem)]'
-          title={loading ? "Loading..." : "Delete user"}
+          title={loading ? "Loading..." : "Delete account"}
           disabled={loading}
           type='submit'
         />
@@ -58,3 +58,8 @@ export const DeleteUser = () => {
     </div>
   );
 };
+
+
+
+
+

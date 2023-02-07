@@ -49,61 +49,64 @@ export const Settings = () => {
   }
 
   return (
-    <div className='px-4 pb-32 min-h-screen relative flex flex-col items-center'>
-      <Navbar navbarTitle='Settings' withBackButton />
-      <Input
-        ref={nameRef}
-        label='Name'
-        name='name'
-        placeholder='Name'
-        defaultValue={userData?.name}
-        type='text'
-      />
-      <Input
-        label='Email'
-        name='email'
-        placeholder='Email'
-        defaultValue={user?.email!}
-        disabled
-        type='email'
-      />
-      <TextButton
-        title='Change password'
-        icon={<FiKey size={"1.5rem"} />}
-        className={"mb-4 mt-10"}
-        onClick={() => navigate("change-password")}
-      />
-      <TextButton
-        title='Logout'
-        icon={<FiLogOut size={"1.5rem"} />}
-        className={"mb-4"}
-        withNavigateButton={false}
-        onClick={() => togglePopup({ title: "Do you wish to logout?", onClick: signOut })}
-      />
-      <TextButton
-        title={`Unlink with ${userData?.linkedUserName}`}
-        icon={<FiLink size={"1.5rem"} />}
-        subtext='After unlinking you will lose your coupons and need to link with someone else to use the app again'
-        onClick={() =>
-          togglePopup({
-            title: "Are you sure you want to unlink?",
-            onClick: unlinkUser,
-          })
-        }
-      />
-      <TextButton
-        title='Delete account'
-        icon={<FiTrash2 size={"1.5rem"} />}
-        className='text-red'
-        onClick={() => navigate("delete-user")}
-      />
-      <PrimaryButton
-        className='absolute bottom-4 w-[calc(100%_-_2rem)]'
-        title={loading ? "Loading..." : "Save changes"}
-        disabled={loading}
-        type='button'
-        onClick={saveChanges}
-      />
+    <>
+      <div className='min-h-screen relative flex flex-col max-w-screen-xl mx-auto'>
+        <Navbar navbarTitle='Settings' withBackButton />
+        <div className='flex flex-col items-center px-4 pb-32'>
+          <Input
+            ref={nameRef}
+            label='Name'
+            name='name'
+            placeholder='Name'
+            defaultValue={userData?.name}
+            type='text'
+          />
+          <Input
+            label='Email'
+            name='email'
+            placeholder='Email'
+            defaultValue={user?.email!}
+            disabled
+            type='email'
+          />
+          <TextButton
+            title='Change password'
+            icon={<FiKey size={"1.5rem"} />}
+            className={"mb-4 mt-10"}
+            onClick={() => navigate("change-password")}
+          />
+          <TextButton
+            title='Logout'
+            icon={<FiLogOut size={"1.5rem"} />}
+            className={"mb-4"}
+            withNavigateButton={false}
+            onClick={() => togglePopup({ title: "Do you wish to logout?", onClick: signOut })}
+          />
+          <TextButton
+            title={`Unlink with ${userData?.linkedUserName}`}
+            icon={<FiLink size={"1.5rem"} />}
+            subtext='After unlinking you will lose your coupons and need to link with someone else to use the app again'
+            onClick={() =>
+              togglePopup({
+                title: "Are you sure you want to unlink?",
+                onClick: unlinkUser,
+              })
+            }
+          />
+          <TextButton
+            title='Delete account'
+            icon={<FiTrash2 size={"1.5rem"} />}
+            className='text-red'
+            onClick={() => navigate("delete-user")}
+          />
+          <PrimaryButton
+            className='absolute bottom-4 w-[calc(100%_-_2rem)]'
+            title='Save changes'
+            type='button'
+            onClick={saveChanges}
+          />
+        </div>
+      </div>
       {popupOpen ? (
         <Popup
           title={popupDetails.title}
@@ -112,6 +115,29 @@ export const Settings = () => {
           close={popupDetails.close}
         />
       ) : null}
-    </div>
+    </>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
