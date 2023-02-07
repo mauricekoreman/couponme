@@ -17,19 +17,3 @@ export async function deleteCoupons({ userId }: { userId: string }) {
     deleteDoc(doc(db, "coupons", id));
   }
 }
-
-// update the data of a the linked user. (e.g. when the current user changes their name, it should also be updated in the linkedUser document)
-export async function updateLinkedUserData({
-  currentUserData,
-  newUserData,
-}: {
-  currentUserData: DocumentData | undefined;
-  newUserData: DocumentData;
-}) {
-  if (!currentUserData) return;
-
-  const linkedUserDocRef = doc(db, "users", currentUserData.linked);
-
-  // update the document of the linked user
-  await updateDoc(linkedUserDocRef, newUserData);
-}

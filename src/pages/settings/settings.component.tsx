@@ -8,6 +8,7 @@ import { Navbar } from "../../components/navbars/navbar.component";
 import { IPopup, Popup } from "../../components/popup/popup.component";
 import { TextButton } from "../../components/buttons/text-button/text-button.component";
 import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
+import { toast } from "react-toastify";
 
 interface ITogglePopup {
   title: string;
@@ -17,12 +18,30 @@ interface ITogglePopup {
 export const Settings = () => {
   const navigate = useNavigate();
   const { signOut, user } = useAuth();
-  const { userData, unlinkUser } = useUser();
+  const { userData, unlinkUser, updateUserData, updateLinkedUserData } = useUser();
   const nameRef = useRef<HTMLInputElement>(null);
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
   const [popupDetails, setPopupDetails] = useState<IPopup>({} as IPopup);
+  const [loading, setLoading] = useState(false);
 
-  function saveChanges() {}
+  function saveChanges() {
+    if (!nameRef.current || !userData) return;
+
+    if (nameRef.current.value !== userData.name) {
+      setLoading(true);
+      updateUserData({ name: nameRef.current.value })
+        .then(() => {
+          updateLinkedUserData({
+            linkedId: userData.linked,
+            newUserData: { linkedUserName: nameRef.current!.value },
+          });
+        })
+        .then(() => {
+          toast.success("Changes are saved!");
+        })
+        .finally(() => setLoading(false));
+    }
+  }
 
   function togglePopup({ title, onClick }: ITogglePopup) {
     setPopupOpen(true);
@@ -80,7 +99,8 @@ export const Settings = () => {
       />
       <PrimaryButton
         className='absolute bottom-4 w-[calc(100%_-_2rem)]'
-        title='Save changes'
+        title={loading ? "Loading..." : "Save changes"}
+        disabled={loading}
         type='button'
         onClick={saveChanges}
       />

@@ -12,14 +12,21 @@ import {
 import { toast } from "react-toastify";
 import { useAuth } from "./auth-context";
 import { db } from "../firebase/firebase.config";
+import { deleteCoupons } from "../firebase/firebase.functions";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { deleteCoupons, updateLinkedUserData } from "../firebase/firebase.functions";
 
 interface IUserContext {
   userData: DocumentData | undefined;
   userDataLoading: boolean;
   updateUserData: (data: DocumentData) => Promise<void>;
   linkUser: (code: string) => Promise<void>;
+  updateLinkedUserData: ({
+    linkedId,
+    newUserData,
+  }: {
+    linkedId: string;
+    newUserData: DocumentData;
+  }) => Promise<void>;
   unlinkUser: () => Promise<void>;
   userDocRef: DocumentReference<DocumentData>;
 }
@@ -47,7 +54,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // update the firestore user document with data passed through
   // then locally update the user state
   async function updateUserData(data: DocumentData) {
-    await updateDoc(userDocRef, data)
+    return await updateDoc(userDocRef, data)
       .then(() => {
         setUserData((prevState) => ({
           ...prevState,
@@ -104,16 +111,36 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
+  // update the data of a the linked user. (e.g. when the current user changes their name, it should also be updated in the linkedUser document)
+  async function updateLinkedUserData({
+    linkedId,
+    newUserData,
+  }: {
+    linkedId: string;
+    newUserData: DocumentData;
+  }) {
+    try {
+      const linkedUserDocRef = doc(db, "users", linkedId);
+      await updateDoc(linkedUserDocRef, newUserData);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error);
+        const message = error.message.replace("Firebase: ", "");
+        toast.error(message);
+      }
+    }
+  }
+
   // unlink two users.
   async function unlinkUser() {
-    if (!user) return;
+    if (!user || !userData) return;
     try {
       // update the document of the current user
       await updateUserData({ linked: null, linkedUserName: null });
 
       // update the document of the linked user
       await updateLinkedUserData({
-        currentUserData: userData,
+        linkedId: userData.linked,
         newUserData: { linked: null, linkedUserName: null },
       });
 
@@ -142,6 +169,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     userDataLoading,
     updateUserData,
     linkUser,
+    updateLinkedUserData,
     unlinkUser,
     userDocRef,
   };
