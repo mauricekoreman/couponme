@@ -6,6 +6,7 @@ import { useAuth } from "../../../context/auth-context";
 import { Input } from "../../../components/input/input.component";
 import { AuthHeading } from "../../../components/auth-heading/auth-heading.component";
 import { PrimaryButton } from "../../../components/buttons/primary-button/primary-button.component";
+import { Navbar } from "../../../components/navbars/navbar.component";
 
 export const Register = () => {
   const { createUser } = useAuth();
@@ -39,23 +40,50 @@ export const Register = () => {
   };
 
   return (
-    <div className='flex flex-col items-center px-4 py-5'>
-      <FiArrowLeft onClick={() => navigate("/login")} size={"2rem"} className='self-start mb-10' />
-      <AuthHeading title='CouponMe' subtitle='Register to' />
-      <form className='w-full flex flex-col items-center mt-20' onSubmit={handleSubmit}>
-        <Input ref={nameRef} name='name' type='text' placeholder='Name' required />
-        <Input ref={emailRef} name='email' type='email' placeholder='Email' required />
-        <Input ref={passwordRef} name='password' type='password' placeholder='Password' required />
-        <Input
-          ref={confirmPasswordRef}
-          name='confirm-password'
-          type='password'
-          placeholder='Confirm password'
-          required
-        />
-        <PrimaryButton type='submit' title='Register' />
-      </form>
+    <div className='flex flex-col px-4 py-5 max-w-screen-lg mx-auto'>
+      <Navbar withBackButton withTitle={false} marginBottom={0} />
+
+      <div className='flex flex-col items-center'>
+        <AuthHeading title='CouponMe' subtitle='Register to' />
+        <form className='w-full flex flex-col items-center mt-20' onSubmit={handleSubmit}>
+          <Input ref={nameRef} name='name' type='text' placeholder='Name' required />
+          <Input ref={emailRef} name='email' type='email' placeholder='Email' required />
+          <Input
+            ref={passwordRef}
+            name='password'
+            type='password'
+            placeholder='Password'
+            required
+          />
+          <Input
+            ref={confirmPasswordRef}
+            name='confirm-password'
+            type='password'
+            placeholder='Confirm password'
+            required
+          />
+          <PrimaryButton type='submit' title='Register' />
+        </form>
+      </div>
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

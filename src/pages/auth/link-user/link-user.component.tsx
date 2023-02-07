@@ -6,6 +6,7 @@ import { PrimaryButton } from "../../../components/buttons/primary-button/primar
 import { FiArrowLeft } from "react-icons/fi";
 import { useAuth } from "../../../context/auth-context";
 import { onSnapshot } from "firebase/firestore";
+import { Navbar } from "../../../components/navbars/navbar.component";
 
 export const LinkUser = () => {
   const { userData, linkUser, userDocRef, updateUserData } = useUser();
@@ -29,8 +30,8 @@ export const LinkUser = () => {
   }, []);
 
   return (
-    <div className='flex flex-col align-middle pt-10 mx-4 relative h-screen'>
-      <FiArrowLeft onClick={signOut} size={"2rem"} className='self-start mb-10' />
+    <div className='flex flex-col items-center align-middle pt-10 mx-4 relative h-screen'>
+      <Navbar backButtonFunction={signOut} withBackButton withTitle={false} />
       <AuthHeading title='Link with a user' titleClass='text-4xl text-center' />
       <p className='font-regularMedium text-center mt-3 mb-7'>
         Fill in the code of your partner to link! Only one person has to submit a code
@@ -39,12 +40,32 @@ export const LinkUser = () => {
       <p className='font-displayRegular text-2xl text-center mb-10'>
         Code: {userData && userData.code}
       </p>
-      <Input ref={codeRef} name='code' type='number' placeholder='Code' />
-      <PrimaryButton
-        title='Submit code'
-        className='absolute bottom-5 left-0'
-        onClick={handleSubmit}
-      />
+      <form
+        onSubmit={handleSubmit}
+        className='w-full h-full flex flex-col items-center justify-between'
+      >
+        <Input ref={codeRef} name='code' type='number' placeholder='Code' />
+        <PrimaryButton title='Submit code' className='mb-5' type='submit' />
+      </form>
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
