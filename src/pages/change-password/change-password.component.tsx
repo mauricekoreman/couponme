@@ -42,9 +42,9 @@ export const ChangePassword = () => {
   }
 
   return (
-    <div className='min-h-screen px-4'>
+    <div className='min-h-screen max-w-screen-xl mx-auto'>
       <Navbar navbarTitle='Change password' withBackButton />
-      <form onSubmit={changePassword}>
+      <form onSubmit={changePassword} className='grid place-items-center px-4'>
         <Input ref={emailRef} label='Email' name='email' placeholder='Email' type='email' />
         <Input
           ref={currentPasswordRef}
@@ -71,3 +71,9 @@ export const ChangePassword = () => {
     </div>
   );
 };
+
+
+
+
+
+

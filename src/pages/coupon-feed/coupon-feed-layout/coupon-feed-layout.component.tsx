@@ -17,8 +17,11 @@ export const CouponFeedLayout = () => {
   }, [location]);
 
   return (
-    <main className='min-h-screen'>
-      <Navbar rightIcon={<FiSettings size={"1.7rem"} onClick={() => navigate("/settings")} />} />
+    <main className='min-h-screen max-w-screen-xl mx-auto'>
+      <Navbar
+        rightIcon={<FiSettings size={"1.7rem"} onClick={() => navigate("/settings")} />}
+        marginBottom={0}
+      />
       <div className='flex mb-6'>
         <NavLink
           to='/received-coupons'
@@ -39,6 +42,11 @@ export const CouponFeedLayout = () => {
     </main>
   );
 };
+
+
+
+
+
 
 
 

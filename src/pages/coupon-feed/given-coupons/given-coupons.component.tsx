@@ -10,7 +10,7 @@ export const GivenCoupons = () => {
   const { givenCoupons, pendingCoupons } = useCoupons();
 
   return (
-    <div className='pb-20'>
+    <div className='pb-20 max-w-screen-xl flex flex-col mx-auto'>
       <DropDown
         name='dropdown-pending'
         data={pendingCoupons}
@@ -21,11 +21,32 @@ export const GivenCoupons = () => {
       <PrimaryButton
         title='Give new coupon'
         onClick={() => navigate("/new")}
-        className='fixed bottom-4 w-[calc(100%_-_2rem)]'
+        className='fixed bottom-4 m-auto left-0 right-0 w-[calc(100%_-_2rem)]'
       />
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

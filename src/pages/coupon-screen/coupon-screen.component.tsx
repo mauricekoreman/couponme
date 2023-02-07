@@ -70,14 +70,17 @@ export const CouponScreen = () => {
   }
 
   return (
-    <div className='px-4 min-h-screen relative'>
-      <Navbar withTitle={false} withBackButton />
-      <Coupon withDesc item={couponData} id={state.couponId} />
-      <p className='text-base font-regularMedium text-center'>{statusText(status)}</p>
-      {showDeleteCoupon(status)}
+    <div className='min-h-screen relative max-w-screen-lg mx-auto'>
+      <Navbar withTitle={false} withBackButton marginBottom={0} />
+      <div className='px-4 flex flex-col items-center pb-32'>
+        <div className='w-full max-w-3xl'>
+          <Coupon withDesc item={couponData} id={state.couponId} />
+          <p className='text-base font-regularMedium text-center mt-7'>{statusText(status)}</p>
+          {showDeleteCoupon(status)}
+        </div>
 
-      <Sticker stickerURI={sticker} className={"mt-32"} />
-
+        <Sticker stickerURI={sticker} className={"mt-12"} />
+      </div>
       <PrimaryButton
         disabled={checkIfButtonDisabled()}
         title={from === user?.uid ? "Confirm used" : "Use coupon"}
@@ -89,9 +92,68 @@ export const CouponScreen = () => {
                 updatedData: { status: couponStatusEnum.PENDING },
               })
         }
-        className='absolute bottom-4 w-[calc(100%_-_2rem)]'
+        className='w-[calc(100%_-_2rem)] fixed bottom-4 left-0 right-0 mx-auto'
       />
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

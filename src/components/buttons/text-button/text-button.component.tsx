@@ -19,11 +19,11 @@ export const TextButton = ({
   ...restProps
 }: ITextButton) => (
   <button
-    className={`font-regularMedium text-xl w-full py-2 transition duration-100 active:opacity-70 ${className}`}
+    className={`font-regularMedium text-xl w-full max-w-[400px] py-2 transition duration-100 active:opacity-70 ${className}`}
     onClick={onClick}
     {...restProps}
   >
-    <div className='flex items-center gap-4'>
+    <div className='flex items-center text-left gap-4'>
       {icon}
       {title}
       {withNavigateButton && <FiChevronRight size={"1.8rem"} className={"ml-auto"} />}
@@ -33,4 +33,7 @@ export const TextButton = ({
     </p>
   </button>
 );
+
+
+
 
