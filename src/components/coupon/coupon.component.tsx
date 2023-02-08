@@ -27,7 +27,7 @@ export const Coupon = ({ id, item, withDesc, onClick }: ICoupon) => {
         withDesc ? "min-h-fit h-52" : "h-44"
       } ${expired && "opacity-50"} ${
         !!onClick &&
-        "cursor-pointer transition duration-75 active:opacity-90 active:drop-shadow-removeBrutal active:translate-y-[2px] active:translate-x-[2px]"
+        "cursor-pointer transition duration-75 active:drop-shadow-removeBrutal active:translate-y-[2px] active:translate-x-[2px]"
       }`}
       style={{ backgroundColor: color }}
       onClick={onClick}

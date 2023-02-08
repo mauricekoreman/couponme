@@ -16,6 +16,7 @@ import { ChangePassword } from "./pages/change-password/change-password.componen
 import { GivenCoupons } from "./pages/coupon-feed/given-coupons/given-coupons.component";
 import { ReceivedCoupons } from "./pages/coupon-feed/received-coupons/received-coupons.component";
 import { CouponFeedLayout } from "./pages/coupon-feed/coupon-feed-layout/coupon-feed-layout.component";
+import { ForgotPassword } from "./pages/auth/forgot-password/forgot-password.component";
 
 function App() {
   const { userLoaded, user } = useAuth();
@@ -30,6 +31,7 @@ function App() {
         <Route element={<ProtectedRoute isAllowed={!!!user} redirectPath='/' />}>
           <Route path='login' element={<Login />} />
           <Route path='register' element={<Register />} />
+          <Route path='forgot-password' element={<ForgotPassword />} />
         </Route>
 
         {/* Only accessible for authenticated users that are not linked */}
@@ -68,6 +70,7 @@ function App() {
 }
 
 export default App;
+
 
 
 

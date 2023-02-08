@@ -1,16 +1,14 @@
 import { toast } from "react-toastify";
-import { FormEvent, useRef } from "react";
-import { FiArrowLeft } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { FormEvent, useRef, useState } from "react";
 import { useAuth } from "../../../context/auth-context";
 import { Input } from "../../../components/input/input.component";
+import { Navbar } from "../../../components/navbars/navbar.component";
 import { AuthHeading } from "../../../components/auth-heading/auth-heading.component";
 import { PrimaryButton } from "../../../components/buttons/primary-button/primary-button.component";
-import { Navbar } from "../../../components/navbars/navbar.component";
 
 export const Register = () => {
   const { createUser } = useAuth();
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -29,6 +27,7 @@ export const Register = () => {
       return;
 
     if (passwordRef.current?.value !== confirmPasswordRef.current?.value) {
+      setLoading(true);
       return toast.error("Passwords are not the same!");
     }
 
@@ -62,7 +61,11 @@ export const Register = () => {
             placeholder='Confirm password'
             required
           />
-          <PrimaryButton type='submit' title='Register' />
+          <PrimaryButton
+            type='submit'
+            title={loading ? "Loading..." : "Register"}
+            disabled={loading}
+          />
         </form>
       </div>
     </div>

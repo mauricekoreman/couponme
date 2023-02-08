@@ -36,6 +36,7 @@ interface IAuthContext {
   signOut: () => Promise<void>;
   resetPassword: ({ email }: { email: string }) => Promise<void>;
   updatePasswordFn: ({ newPassword }: { newPassword: string }) => Promise<void>;
+  passwordResetEmail: ({ userEmail }: { userEmail: string }) => Promise<void>;
   reauthenticate: ({
     email,
     password,
@@ -118,6 +119,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
+  async function passwordResetEmail({ userEmail }: { userEmail: string }) {
+    return sendPasswordResetEmail(auth, userEmail)
+      .then(() => {
+        toast.success(`An email has been sent to ${userEmail}!`);
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          console.error(error);
+          const message = error.message.replace("Firebase: ", "");
+          toast.error(message);
+        }
+      });
+  }
+
   async function reauthenticate({ email, password }: { [key: string]: string }) {
     try {
       if (!auth.currentUser) {
@@ -174,6 +189,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signOut,
     resetPassword,
     updatePasswordFn,
+    passwordResetEmail,
     reauthenticate,
     deleteAccount,
   };
