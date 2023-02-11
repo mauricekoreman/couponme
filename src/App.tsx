@@ -6,7 +6,6 @@ import { Login } from "./pages/auth/login/login.component";
 import { Loading } from "./pages/loading/loading.component";
 import { Settings } from "./pages/settings/settings.component";
 import { NotFound } from "./pages/not-found/not-found.component";
-import { Register } from "./pages/auth/register/register.component";
 import { LinkUser } from "./pages/auth/link-user/link-user.component";
 import { DeleteUser } from "./pages/delete-user/delete-user.component";
 import { CouponScreen } from "./pages/coupon-screen/coupon-screen.component";
@@ -16,7 +15,6 @@ import { ChangePassword } from "./pages/change-password/change-password.componen
 import { GivenCoupons } from "./pages/coupon-feed/given-coupons/given-coupons.component";
 import { ReceivedCoupons } from "./pages/coupon-feed/received-coupons/received-coupons.component";
 import { CouponFeedLayout } from "./pages/coupon-feed/coupon-feed-layout/coupon-feed-layout.component";
-import { ForgotPassword } from "./pages/auth/forgot-password/forgot-password.component";
 
 function App() {
   const { userLoaded, user } = useAuth();
@@ -30,8 +28,6 @@ function App() {
         {/* Only accessible for non-authenticated users */}
         <Route element={<ProtectedRoute isAllowed={!!!user} redirectPath='/' />}>
           <Route path='login' element={<Login />} />
-          <Route path='register' element={<Register />} />
-          <Route path='forgot-password' element={<ForgotPassword />} />
         </Route>
 
         {/* Only accessible for authenticated users that are not linked */}
@@ -57,7 +53,6 @@ function App() {
             <Route path='new' element={<CreateCoupon />} />
             <Route path='coupon' element={<CouponScreen />} />
             <Route path='settings' element={<Settings />} />
-            <Route path='settings/change-password' element={<ChangePassword />} />
             <Route path='settings/delete-user' element={<DeleteUser />} />
           </Route>
         </Route>

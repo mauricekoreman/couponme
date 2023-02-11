@@ -1,5 +1,5 @@
+import { toast } from "react-toastify";
 import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth-context";
 import { useUser } from "../../context/user-context";
 import { Input } from "../../components/input/input.component";
@@ -8,7 +8,6 @@ import { Navbar } from "../../components/navbars/navbar.component";
 import { IPopup, Popup } from "../../components/popup/popup.component";
 import { TextButton } from "../../components/buttons/text-button/text-button.component";
 import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
-import { toast } from "react-toastify";
 
 interface ITogglePopup {
   title: string;
@@ -16,8 +15,7 @@ interface ITogglePopup {
 }
 
 export const Settings = () => {
-  const navigate = useNavigate();
-  const { signOut, user } = useAuth();
+  const { signOut, user, reauthenticate, deleteAccount } = useAuth();
   const { userData, unlinkUser, updateUserData, updateLinkedUserData } = useUser();
   const nameRef = useRef<HTMLInputElement>(null);
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
@@ -41,6 +39,16 @@ export const Settings = () => {
         })
         .finally(() => setLoading(false));
     }
+  }
+
+  function deleteUser() {
+    reauthenticate().then(async (userCredential) => {
+      if (userCredential) {
+        await deleteAccount({
+          linkedUserId: userData!.linked,
+        });
+      }
+    });
   }
 
   function togglePopup({ title, onClick }: ITogglePopup) {
@@ -70,12 +78,6 @@ export const Settings = () => {
             type='email'
           />
           <TextButton
-            title='Change password'
-            icon={<FiKey size={"1.5rem"} />}
-            className={"mb-4 mt-10"}
-            onClick={() => navigate("change-password")}
-          />
-          <TextButton
             title='Logout'
             icon={<FiLogOut size={"1.5rem"} />}
             className={"mb-4"}
@@ -97,12 +99,13 @@ export const Settings = () => {
             title='Delete account'
             icon={<FiTrash2 size={"1.5rem"} />}
             className='text-red'
-            onClick={() => navigate("delete-user")}
+            onClick={deleteUser}
           />
           <PrimaryButton
             className='absolute bottom-4 w-[calc(100%_-_2rem)]'
-            title='Save changes'
+            title={loading ? "Loading..." : "Save changes"}
             type='button'
+            disabled={loading}
             onClick={saveChanges}
           />
         </div>
@@ -118,26 +121,3 @@ export const Settings = () => {
     </>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

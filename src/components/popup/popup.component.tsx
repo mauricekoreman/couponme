@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { PrimaryButton } from "../buttons/primary-button/primary-button.component";
 
 export interface IPopup {
@@ -20,18 +19,3 @@ export const Popup = ({ title, onClick, close, children }: IPopup) => (
     </div>
   </div>
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,49 +1,27 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
 import {
-  EmailAuthProvider,
   User,
-  UserCredential,
-  createUserWithEmailAndPassword,
   deleteUser,
+  UserCredential,
+  signInWithPopup,
+  GoogleAuthProvider,
   onAuthStateChanged,
-  reauthenticateWithCredential,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  updatePassword,
+  reauthenticateWithPopup,
 } from "firebase/auth";
-import { auth, db } from "../firebase/firebase.config";
-import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
-import { generateRandom } from "../utils/generate-random";
 import { toast } from "react-toastify";
+import { auth, db } from "../firebase/firebase.config";
+import { generateRandom } from "../utils/generate-random";
 import { deleteCoupons } from "../firebase/firebase.functions";
-
-interface ISignIn {
-  email: string;
-  password: string;
-}
-
-interface IRegister extends ISignIn {
-  name: string;
-}
+import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 type TUser = User | null | undefined;
 
 interface IAuthContext {
   user: TUser;
   userLoaded: boolean;
-  signIn: ({ email, password }: ISignIn) => Promise<void | UserCredential>;
-  createUser: ({ email, password }: IRegister) => Promise<void | UserCredential>;
-  signOut: () => Promise<void>;
-  resetPassword: ({ email }: { email: string }) => Promise<void>;
-  updatePasswordFn: ({ newPassword }: { newPassword: string }) => Promise<void>;
-  passwordResetEmail: ({ userEmail }: { userEmail: string }) => Promise<void>;
-  reauthenticate: ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) => Promise<UserCredential | undefined>;
+  signInWithGoogle(): Promise<void>;
+  signOut(): Promise<void>;
+  reauthenticate: () => Promise<UserCredential | undefined>;
   deleteAccount: ({ linkedUserId }: { linkedUserId: string }) => Promise<void>;
 }
 
@@ -61,23 +39,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  async function signIn({ email, password }: ISignIn) {
+  async function signInWithGoogle() {
     try {
-      return await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      if (error instanceof Error) {
-        const message = error.message.replace("Firebase: ", "");
-        toast.error(message);
-      }
-    }
-  }
+      let provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
 
-  async function createUser({ email, password, name }: IRegister) {
-    try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
+      const user = await signInWithPopup(auth, provider);
+      // todo: get user doc. If !exists => setData.
+
       return await setDoc(doc(db, "users", user.user.uid), {
-        email,
-        name,
+        email: user.user.email,
+        name: user.user.displayName,
         linked: null,
         code: generateRandom(6),
       });
@@ -93,54 +65,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return auth.signOut();
   }
 
-  async function resetPassword({ email }: { email: string }) {
-    await sendPasswordResetEmail(auth, email)
-      .then(() => toast.success(`A password reset email has been sent to ${email}!`))
-      .catch((error) => {
-        const message = error.message.replace("Firebase: ", "");
-        toast.error(message);
-      });
-  }
-
-  async function updatePasswordFn({ newPassword }: { newPassword: string }) {
+  async function reauthenticate() {
     try {
       if (!auth.currentUser) {
         throw new Error("There is no user data...");
       }
 
-      const message = await updatePassword(auth.currentUser, newPassword);
-      return message;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error);
-        const message = error.message.replace("Firebase: ", "");
-        toast.error(message);
-      }
-    }
-  }
-
-  async function passwordResetEmail({ userEmail }: { userEmail: string }) {
-    return sendPasswordResetEmail(auth, userEmail)
-      .then(() => {
-        toast.success(`An email has been sent to ${userEmail}!`);
-      })
-      .catch((error) => {
-        if (error instanceof Error) {
-          console.error(error);
-          const message = error.message.replace("Firebase: ", "");
-          toast.error(message);
-        }
-      });
-  }
-
-  async function reauthenticate({ email, password }: { [key: string]: string }) {
-    try {
-      if (!auth.currentUser) {
-        throw new Error("There is no user data...");
-      }
-
-      const credential = EmailAuthProvider.credential(email, password);
-      const authenticated = await reauthenticateWithCredential(auth.currentUser, credential);
+      // const credential = GoogleAuthProvider.credential(email, password);
+      const authenticated = await reauthenticateWithPopup(
+        auth.currentUser,
+        new GoogleAuthProvider()
+      );
 
       return authenticated;
     } catch (error) {
@@ -161,14 +96,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // delete the coupons the current user gave and received
       deleteCoupons({ userId: user.uid });
 
-      // deleteDoc of user entry
-      deleteDoc(doc(db, "users", user.uid));
-
       // unlink user
       if (linkedUserId) {
         const linkedUserDocRef = doc(db, "users", linkedUserId);
         await updateDoc(linkedUserDocRef, { linked: null, linkedUserName: null });
       }
+
+      // deleteDoc of user entry
+      deleteDoc(doc(db, "users", user.uid));
 
       // delete user
       deleteUser(user);
@@ -184,12 +119,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value = {
     user,
     userLoaded,
-    signIn,
-    createUser,
+    signInWithGoogle,
     signOut,
-    resetPassword,
-    updatePasswordFn,
-    passwordResetEmail,
     reauthenticate,
     deleteAccount,
   };
@@ -200,7 +131,3 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   return useContext(AuthContext);
 };
-
-
-
-

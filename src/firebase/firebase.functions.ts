@@ -1,6 +1,6 @@
-import { DocumentData, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
-import { getCouponsGivenQuery, getCouponsReceivedQuery } from "./firebase.queries";
 import { db } from "./firebase.config";
+import { deleteDoc, doc, getDocs } from "firebase/firestore";
+import { getCouponsGivenQuery, getCouponsReceivedQuery } from "./firebase.queries";
 
 // delete all coupons that were given and received by these users
 export async function deleteCoupons({ userId }: { userId: string }) {
