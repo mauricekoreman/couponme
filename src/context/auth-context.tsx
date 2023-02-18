@@ -5,6 +5,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   onAuthStateChanged,
+  getAdditionalUserInfo,
   reauthenticateWithPopup,
 } from "firebase/auth";
 import { toast } from "react-toastify";
@@ -45,14 +46,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       provider.setCustomParameters({ prompt: "select_account" });
 
       const user = await signInWithPopup(auth, provider);
-      // todo: get user doc. If !exists => setData.
-
-      return await setDoc(doc(db, "users", user.user.uid), {
-        email: user.user.email,
-        name: user.user.displayName,
-        linked: null,
-        code: generateRandom(6),
-      });
+      if (getAdditionalUserInfo(user)?.isNewUser) {
+        return await setDoc(doc(db, "users", user.user.uid), {
+          email: user.user.email,
+          name: user.user.displayName,
+          linked: null,
+          code: generateRandom(6),
+        });
+      } else {
+        return;
+      }
     } catch (error) {
       if (error instanceof Error) {
         const message = error.message.replace("Firebase: ", "");
