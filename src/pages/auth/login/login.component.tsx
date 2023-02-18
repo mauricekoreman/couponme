@@ -2,6 +2,7 @@ import { useState } from "react";
 import icon from "../../../assets/adaptive-icon.png";
 import { useAuth } from "../../../context/auth-context";
 import { PrimaryButton } from "../../../components/buttons/primary-button/primary-button.component";
+import { AuthHeading } from "../../../components/auth-heading/auth-heading.component";
 
 export const Login = () => {
   const { signInWithGoogle } = useAuth();
@@ -15,7 +16,7 @@ export const Login = () => {
 
   return (
     <div className='flex flex-col gap-20 items-center px-4 py-5 mt-[20vh]'>
-      <img src={icon} className='w-52 h-auto' />
+      <AuthHeading title='CouponMe' subtitle='Login to' />
       <PrimaryButton
         disabled={loading}
         title={loading ? "Loading..." : "Sign in with Google"}
