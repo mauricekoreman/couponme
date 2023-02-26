@@ -1,8 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { getMessaging, getToken } from "firebase/messaging";
-import { requestNotificationPermission } from "../utils/notifications";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -16,26 +14,5 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+
 export const auth = getAuth(app);
-
-const messaging = getMessaging(app);
-// Add the public key generated from the console here.
-getToken(messaging, {
-  vapidKey: import.meta.env.VITE_FIREBASE_MESSAGING_TOKEN,
-})
-  .then((currentToken) => {
-    if (currentToken) {
-      // Send current token to server and update UI if necessary?
-      console.log("SUCCESS MESSAGING TOKEN: ", currentToken);
-    } else {
-      // Show permission request UI
-      requestNotificationPermission();
-    }
-  })
-  .catch((err) => console.error("An error occured while retrieving messaging token...", err));
-
-
-
-
-
-
