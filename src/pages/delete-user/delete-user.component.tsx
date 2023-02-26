@@ -24,7 +24,7 @@ export const DeleteUser = () => {
 
     setLoading(true);
 
-    reauthenticate({ email: emailRef.current.value, password: passwordRef.current.value })
+    reauthenticate()
       .then(async (userCredential) => {
         if (userCredential) {
           await deleteAccount({
@@ -58,6 +58,7 @@ export const DeleteUser = () => {
     </div>
   );
 };
+
 
 
 
