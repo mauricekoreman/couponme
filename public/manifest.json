@@ -5,7 +5,7 @@
   "background_color": "#FFFFF4",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "https://couponme.netlify.app/",
   "description": "Coupon app",
   "orientation": "portrait",
   "icons": [
@@ -35,4 +35,7 @@
     }
   ]
 }
+
+
+
 
