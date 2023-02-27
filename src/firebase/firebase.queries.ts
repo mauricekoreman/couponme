@@ -1,5 +1,16 @@
-import { addDoc, collection, doc, getDoc, orderBy, query, where } from "firebase/firestore";
+import {
+  DocumentData,
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "./firebase.config";
+import { toast } from "react-toastify";
 
 export function getCouponsReceivedQuery(userId: string) {
   const couponsReceivedQuery = query(
@@ -52,5 +63,21 @@ export async function createCoupon(couponData: ICreateCouponFn) {
   const couponRef = await addDoc(collection(db, "coupons"), couponData);
 
   return couponRef;
+}
+
+export async function updateCoupon(couponData: DocumentData, couponId: string) {
+  const couponRef = doc(db, "coupons", couponId);
+  return new Promise<boolean>(
+    async (resolve, reject) =>
+      await updateDoc(couponRef, couponData)
+        .then(() => {
+          toast.success("Updated coupon!");
+          resolve(true);
+        })
+        .catch(() => {
+          toast.error("Couldn't update coupon...");
+          reject(false);
+        })
+  );
 }
 

@@ -1,33 +1,42 @@
 import { colors } from "./colors";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { DocumentData } from "firebase/firestore";
-import { inputDateString, localDateString } from "../../utils/formatDate";
 import { useUser } from "../../context/user-context";
 import { useAuth } from "../../context/auth-context";
+import { inputDateString, localDateString } from "../../utils/formatDate";
 import { FiCalendar, FiMinus, FiPlus } from "react-icons/fi";
 import { Modal } from "../../components/modal/modal.component";
 import { Input } from "../../components/input/input.component";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Navbar } from "../../components/navbars/navbar.component";
 import { Sticker } from "../../components/sticker/sticker.component";
-import { createCoupon, getStickers } from "../../firebase/firebase.queries";
-import { SecondaryButton } from "../../components/buttons/secondary-button/secondary-button.component";
-import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
-import { couponStatusEnum } from "../coupon-screen/coupon-screen.component";
 import { Textarea } from "../../components/input/textarea.component";
+import { createCoupon, getStickers, updateCoupon } from "../../firebase/firebase.queries";
+import { couponStatusEnum } from "../coupon-screen/coupon-screen.component";
+import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
+import { SecondaryButton } from "../../components/buttons/secondary-button/secondary-button.component";
+import { ICouponData } from "../../context/coupon-context";
 
-export const CreateCoupon = () => {
+export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
   const { user } = useAuth();
   const { userData } = useUser();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { state } = useLocation();
+
+  useEffect(() => {
+    if (type === "edit" && !state) navigate("/given-coupons");
+  }, [state]);
+
+  const { couponData: couponState, couponId }: { couponData: ICouponData; couponId: string } =
+    state || {};
 
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [quantityCount, setQuantityCount] = useState(1);
-  const [selectedColor, setSelectedColor] = useState(colors.blue);
-  const [sticker, setSticker] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState(couponState?.color ?? colors.blue);
+  const [sticker, setSticker] = useState<string | null>(couponState?.sticker ?? null);
   const dateRef = useRef<HTMLInputElement>(null);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -69,10 +78,18 @@ export const CreateCoupon = () => {
         createdAt: new Date().toISOString(),
       };
 
-      const couponRef = await createCoupon(couponData);
-      // If successful
-      if (!!couponRef) {
-        navigate("/given-coupons");
+      if (type === "create") {
+        const couponRef = await createCoupon(couponData);
+        // If successful
+        if (!!couponRef) {
+          navigate("/given-coupons");
+        }
+      } else if (type === "edit") {
+        const updated = await updateCoupon(couponData, couponId);
+
+        if (!!updated) {
+          navigate(-1);
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -97,7 +114,11 @@ export const CreateCoupon = () => {
 
   return (
     <div>
-      <Navbar navbarTitle='New coupon' withBackButton marginBottom={0} />
+      <Navbar
+        navbarTitle={type === "create" ? "New coupon" : "Edit coupon"}
+        withBackButton
+        marginBottom={0}
+      />
       <form className='px-4 py-6' onSubmit={handleSubmit}>
         <Input
           ref={titleRef}
@@ -106,6 +127,7 @@ export const CreateCoupon = () => {
           type={"text"}
           name='title'
           maxLength={26}
+          defaultValue={couponState?.title}
         />
         <Textarea
           ref={descriptionRef}
@@ -114,13 +136,14 @@ export const CreateCoupon = () => {
           name='description'
           maxLength={120}
           rows={4}
+          defaultValue={couponState?.description ?? undefined}
         />
 
         <div className='mb-12'>
           <label className={standardText}>Quantity</label>
           <div className='flex items-center w-36 justify-between mt-4'>
             <SecondaryButton textOrIcon={<FiMinus />} onClick={() => clickButton("subtract")} />
-            <p className={standardText}>{quantityCount}</p>
+            <p className={standardText}>{couponState?.quantity ?? quantityCount}</p>
             <SecondaryButton textOrIcon={<FiPlus />} onClick={() => clickButton("add")} />
           </div>
         </div>
@@ -138,6 +161,7 @@ export const CreateCoupon = () => {
               type='date'
               min={inputDateString(new Date())}
               required
+              defaultValue={couponState && inputDateString(new Date(couponState?.expirationDate))}
               className={`${standardText} border-0 outline outline-2 rounded-sm bg-offwhite  outline-black p-0 m-0`}
             />
           </div>
@@ -176,7 +200,12 @@ export const CreateCoupon = () => {
               name='choose sticker'
             />
             {sticker && (
-              <SecondaryButton textOrIcon='Delete' className='px-8 mt-5' name='delete sticker' />
+              <SecondaryButton
+                onClick={() => setSticker(null)}
+                textOrIcon='Delete'
+                className='px-8 mt-5'
+                name='delete sticker'
+              />
             )}
           </div>
           {modalOpen && (
@@ -199,37 +228,12 @@ export const CreateCoupon = () => {
         </div>
 
         <PrimaryButton
-          disabled={loading}
-          title={loading ? "Loading..." : "Create coupon"}
+          loading={loading}
+          title={type === "create" ? "Create coupon" : "Save changes"}
           type='submit'
         />
       </form>
     </div>
   );
+
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

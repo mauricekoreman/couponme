@@ -49,8 +49,9 @@ function App() {
               <Route path='given-coupons' element={<GivenCoupons />} />
               <Route path='received-coupons' element={<ReceivedCoupons />} />
             </Route>
-            <Route path='new' element={<CreateCoupon />} />
+            <Route path='new' element={<CreateCoupon type='create' />} />
             <Route path='coupon' element={<CouponScreen />} />
+            <Route path='coupon/edit' element={<CreateCoupon type='edit' />} />
             <Route path='settings' element={<Settings />} />
             <Route path='settings/delete-user' element={<DeleteUser />} />
           </Route>
@@ -64,6 +65,7 @@ function App() {
 }
 
 export default App;
+
 
 
 

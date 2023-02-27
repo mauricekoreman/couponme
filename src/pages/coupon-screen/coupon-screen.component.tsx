@@ -24,6 +24,8 @@ export const CouponScreen = () => {
   const [couponData, setCouponData] = useState<ICouponData>(state.couponData);
   const { from, quantity, status, sticker, used } = couponData;
 
+  const isCreator = from === user?.uid;
+
   useEffect(() => {
     if (modifiedCoupon.id === state.couponId) {
       setCouponData(modifiedCoupon.data);
@@ -32,8 +34,8 @@ export const CouponScreen = () => {
 
   function checkIfButtonDisabled() {
     if (
-      (status === couponStatusEnum.PENDING && from !== user?.uid) ||
-      (status === couponStatusEnum.IDLE && from === user?.uid) ||
+      (status === couponStatusEnum.PENDING && !isCreator) ||
+      (status === couponStatusEnum.IDLE && isCreator) ||
       status === couponStatusEnum.EXPIRED ||
       status === couponStatusEnum.FINISHED
     ) {
@@ -46,7 +48,7 @@ export const CouponScreen = () => {
   function statusText(status: string) {
     switch (status) {
       case couponStatusEnum.PENDING:
-        return from === user!.uid
+        return isCreator
           ? `${userData?.linkedUserName} has used this coupon and is waiting for you to confirm that it has been fulfilled!`
           : `Status: waiting for ${userData?.linkedUserName} to confirm completion`;
       case couponStatusEnum.EXPIRED:
@@ -71,7 +73,19 @@ export const CouponScreen = () => {
 
   return (
     <div className='min-h-screen relative max-w-screen-lg mx-auto'>
-      <Navbar withTitle={false} withBackButton marginBottom={0} />
+      <Navbar
+        withTitle={false}
+        withBackButton
+        marginBottom={0}
+        rightIcon={
+          <button
+            className='font-regularMedium text-sm text-black'
+            onClick={() => navigate("edit", { state: { couponData, couponId: state.couponId } })}
+          >
+            Edit coupon
+          </button>
+        }
+      />
       <div className='px-4 flex flex-col items-center pb-32'>
         <div className='w-full max-w-3xl'>
           <Coupon withDesc item={couponData} id={state.couponId} />
@@ -83,9 +97,9 @@ export const CouponScreen = () => {
       </div>
       <PrimaryButton
         disabled={checkIfButtonDisabled()}
-        title={from === user?.uid ? "Confirm used" : "Use coupon"}
+        title={isCreator ? "Confirm used" : "Use coupon"}
         onClick={() =>
-          from === user?.uid
+          isCreator
             ? handleConfirmUsed({ couponId: state.couponId, quantity, used })
             : updateCoupon({
                 couponId: state.couponId,
@@ -96,65 +110,5 @@ export const CouponScreen = () => {
       />
     </div>
   );
+
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
