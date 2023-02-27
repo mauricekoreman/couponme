@@ -83,12 +83,16 @@ export const CouponScreen = () => {
           withBackButton
           marginBottom={0}
           rightIcon={
-            <button
-              className='font-regularMedium text-sm text-black'
-              onClick={() => navigate("edit", { state: { couponData, couponId: state?.couponId } })}
-            >
-              Edit coupon
-            </button>
+            isCreator && (
+              <button
+                className='font-regularMedium text-sm text-black'
+                onClick={() =>
+                  navigate("edit", { state: { couponData, couponId: state?.couponId } })
+                }
+              >
+                Edit coupon
+              </button>
+            )
           }
         />
         <div className='px-4 flex flex-col items-center pb-32'>
@@ -116,6 +120,7 @@ export const CouponScreen = () => {
       </div>
     )
   );
+
 
 
 
