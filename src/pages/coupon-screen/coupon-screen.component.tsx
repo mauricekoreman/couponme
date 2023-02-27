@@ -21,13 +21,17 @@ export const CouponScreen = () => {
   const { userData } = useUser();
   const { state } = useLocation();
   const navigate = useNavigate();
-  const [couponData, setCouponData] = useState<ICouponData>(state.couponData);
-  const { from, quantity, status, sticker, used } = couponData;
+  const [couponData, setCouponData] = useState<ICouponData>(state?.couponData);
+  const { from, quantity, status, sticker, used } = couponData || {};
 
   const isCreator = from === user?.uid;
 
   useEffect(() => {
-    if (modifiedCoupon.id === state.couponId) {
+    if (!!!state) navigate("/given-coupons");
+  }, [state]);
+
+  useEffect(() => {
+    if (modifiedCoupon.id === state?.couponId) {
       setCouponData(modifiedCoupon.data);
     }
   }, [modifiedCoupon]);
@@ -72,43 +76,53 @@ export const CouponScreen = () => {
   }
 
   return (
-    <div className='min-h-screen relative max-w-screen-lg mx-auto'>
-      <Navbar
-        withTitle={false}
-        withBackButton
-        marginBottom={0}
-        rightIcon={
-          <button
-            className='font-regularMedium text-sm text-black'
-            onClick={() => navigate("edit", { state: { couponData, couponId: state.couponId } })}
-          >
-            Edit coupon
-          </button>
-        }
-      />
-      <div className='px-4 flex flex-col items-center pb-32'>
-        <div className='w-full max-w-3xl'>
-          <Coupon withDesc item={couponData} id={state.couponId} />
-          <p className='text-base font-regularMedium text-center mt-7'>{statusText(status)}</p>
-          {showDeleteCoupon(status)}
-        </div>
+    state && (
+      <div className='min-h-screen relative max-w-screen-lg mx-auto'>
+        <Navbar
+          withTitle={false}
+          withBackButton
+          marginBottom={0}
+          rightIcon={
+            <button
+              className='font-regularMedium text-sm text-black'
+              onClick={() => navigate("edit", { state: { couponData, couponId: state?.couponId } })}
+            >
+              Edit coupon
+            </button>
+          }
+        />
+        <div className='px-4 flex flex-col items-center pb-32'>
+          <div className='w-full max-w-3xl'>
+            <Coupon withDesc item={couponData} id={state?.couponId} />
+            <p className='text-base font-regularMedium text-center mt-7'>{statusText(status)}</p>
+            {showDeleteCoupon(status)}
+          </div>
 
-        <Sticker stickerURI={sticker} className={"mt-12"} />
+          <Sticker stickerURI={sticker} className={"mt-12"} />
+        </div>
+        <PrimaryButton
+          disabled={checkIfButtonDisabled()}
+          title={isCreator ? "Confirm used" : "Use coupon"}
+          onClick={() =>
+            isCreator
+              ? handleConfirmUsed({ couponId: state?.couponId, quantity, used })
+              : updateCoupon({
+                  couponId: state?.couponId,
+                  updatedData: { status: couponStatusEnum.PENDING },
+                })
+          }
+          className='w-[calc(100%_-_2rem)] fixed bottom-6 left-0 right-0 mx-auto'
+        />
       </div>
-      <PrimaryButton
-        disabled={checkIfButtonDisabled()}
-        title={isCreator ? "Confirm used" : "Use coupon"}
-        onClick={() =>
-          isCreator
-            ? handleConfirmUsed({ couponId: state.couponId, quantity, used })
-            : updateCoupon({
-                couponId: state.couponId,
-                updatedData: { status: couponStatusEnum.PENDING },
-              })
-        }
-        className='w-[calc(100%_-_2rem)] fixed bottom-6 left-0 right-0 mx-auto'
-      />
-    </div>
+    )
   );
+
+
+
+
+
+
+
+
 
 };

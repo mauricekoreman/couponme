@@ -16,7 +16,9 @@ import { createCoupon, getStickers, updateCoupon } from "../../firebase/firebase
 import { couponStatusEnum } from "../coupon-screen/coupon-screen.component";
 import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
 import { SecondaryButton } from "../../components/buttons/secondary-button/secondary-button.component";
-import { ICouponData } from "../../context/coupon-context";
+import { ICouponData, useCoupons } from "../../context/coupon-context";
+import { TextButton } from "../../components/buttons/text-button/text-button.component";
+import { Popup } from "../../components/popup/popup.component";
 
 export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
   const { user } = useAuth();
@@ -24,9 +26,11 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { state } = useLocation();
+  const { deleteCoupon } = useCoupons();
+  const [popupOpen, setPopupOpen] = useState(false);
 
   useEffect(() => {
-    if (type === "edit" && !state) navigate("/given-coupons");
+    if (type === "edit" && !!!state) navigate("/given-coupons");
   }, [state]);
 
   const { couponData: couponState, couponId }: { couponData: ICouponData; couponId: string } =
@@ -232,7 +236,25 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
           title={type === "create" ? "Create coupon" : "Save changes"}
           type='submit'
         />
+
+        {type === "edit" && (
+          <button
+            type='button'
+            onClick={() => setPopupOpen(true)}
+            className='text-red font-regularMedium text-base text-center block mx-auto mt-6'
+          >
+            Delete coupon
+          </button>
+        )}
       </form>
+      {popupOpen ? (
+        <Popup
+          title={"Are you sure you want to delete this coupon?"}
+          onClick={() => deleteCoupon({ couponId: state.couponId }).then(() => navigate(-2))}
+          key={"Delete coupon"}
+          close={() => setPopupOpen(false)}
+        />
+      ) : null}
     </div>
   );
 
