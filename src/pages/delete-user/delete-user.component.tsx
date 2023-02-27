@@ -49,7 +49,7 @@ export const DeleteUser = () => {
         />
 
         <PrimaryButton
-          className='absolute bottom-4 w-[calc(100%_-_2rem)]'
+          className='absolute bottom-6 w-[calc(100%_-_2rem)]'
           title={loading ? "Loading..." : "Delete account"}
           disabled={loading}
           type='submit'
@@ -58,6 +58,7 @@ export const DeleteUser = () => {
     </div>
   );
 };
+
 
 
 

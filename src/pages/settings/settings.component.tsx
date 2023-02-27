@@ -102,7 +102,7 @@ export const Settings = () => {
             onClick={deleteUser}
           />
           <PrimaryButton
-            className='absolute bottom-4 w-[calc(100%_-_2rem)]'
+            className='absolute bottom-6 w-[calc(100%_-_2rem)]'
             title={loading ? "Loading..." : "Save changes"}
             type='button'
             disabled={loading}
@@ -121,3 +121,4 @@ export const Settings = () => {
     </>
   );
 };
+

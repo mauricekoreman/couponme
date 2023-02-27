@@ -97,8 +97,8 @@ export const CreateCoupon = () => {
 
   return (
     <div>
-      <Navbar navbarTitle='New coupon' withBackButton />
-      <form className='px-4 py-7' onSubmit={handleSubmit}>
+      <Navbar navbarTitle='New coupon' withBackButton marginBottom={0} />
+      <form className='px-4 py-6' onSubmit={handleSubmit}>
         <Input
           ref={titleRef}
           label='Title*'
@@ -207,6 +207,8 @@ export const CreateCoupon = () => {
     </div>
   );
 };
+
+
 
 
 

@@ -15,7 +15,7 @@ export const Login = () => {
   }
 
   return (
-    <div className='flex flex-col gap-20 items-center px-4 py-5 mt-[20vh]'>
+    <div className='flex flex-col gap-20 items-center px-4 py-6 mt-[20vh]'>
       <AuthHeading title='CouponMe' subtitle='Login to' />
       <PrimaryButton
         disabled={loading}
@@ -25,3 +25,4 @@ export const Login = () => {
     </div>
   );
 };
+

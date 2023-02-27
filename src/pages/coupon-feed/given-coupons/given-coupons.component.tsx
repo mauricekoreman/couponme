@@ -21,11 +21,13 @@ export const GivenCoupons = () => {
       <PrimaryButton
         title='Give new coupon'
         onClick={() => navigate("/new")}
-        className='fixed bottom-4 m-auto left-0 right-0 w-[calc(100%_-_2rem)]'
+        className='fixed bottom-6 m-auto left-0 right-0 w-[calc(100%_-_2rem)]'
       />
     </div>
   );
 };
+
+
 
 
 

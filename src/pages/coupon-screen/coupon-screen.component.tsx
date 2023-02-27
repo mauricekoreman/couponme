@@ -92,11 +92,12 @@ export const CouponScreen = () => {
                 updatedData: { status: couponStatusEnum.PENDING },
               })
         }
-        className='w-[calc(100%_-_2rem)] fixed bottom-4 left-0 right-0 mx-auto'
+        className='w-[calc(100%_-_2rem)] fixed bottom-6 left-0 right-0 mx-auto'
       />
     </div>
   );
 };
+
 
 
 
