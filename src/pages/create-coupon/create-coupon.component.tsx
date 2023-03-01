@@ -1,24 +1,23 @@
 import { colors } from "./colors";
 import { toast } from "react-toastify";
-import { useLocation, useNavigate } from "react-router-dom";
 import { DocumentData } from "firebase/firestore";
 import { useUser } from "../../context/user-context";
 import { useAuth } from "../../context/auth-context";
-import { inputDateString, localDateString } from "../../utils/formatDate";
+import { inputDateString } from "../../utils/formatDate";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FiCalendar, FiMinus, FiPlus } from "react-icons/fi";
 import { Modal } from "../../components/modal/modal.component";
 import { Input } from "../../components/input/input.component";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { Popup } from "../../components/popup/popup.component";
 import { Navbar } from "../../components/navbars/navbar.component";
 import { Sticker } from "../../components/sticker/sticker.component";
 import { Textarea } from "../../components/input/textarea.component";
-import { createCoupon, getStickers, updateCoupon } from "../../firebase/firebase.queries";
+import { ICouponData, useCoupons } from "../../context/coupon-context";
 import { couponStatusEnum } from "../coupon-screen/coupon-screen.component";
+import { createCoupon, getStickers, updateCoupon } from "../../firebase/firebase.queries";
 import { PrimaryButton } from "../../components/buttons/primary-button/primary-button.component";
 import { SecondaryButton } from "../../components/buttons/secondary-button/secondary-button.component";
-import { ICouponData, useCoupons } from "../../context/coupon-context";
-import { TextButton } from "../../components/buttons/text-button/text-button.component";
-import { Popup } from "../../components/popup/popup.component";
 
 export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
   const { user } = useAuth();
@@ -44,7 +43,7 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
   const dateRef = useRef<HTMLInputElement>(null);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [stickers, setStickers] = useState<DocumentData | {}>({});
+  const [stickers, setStickers] = useState<string[]>([]);
 
   const standardExpirationDate = new Date();
   standardExpirationDate.setMonth(standardExpirationDate.getMonth() + 4);
@@ -106,10 +105,9 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
 
   useEffect(() => {
     async function stickers() {
-      if (Object.keys(stickers).length === 0) {
-        const stickerSnap = await getStickers();
-        const data = stickerSnap.data();
-        if (data !== undefined) setStickers(data);
+      if (stickers.length === 0) {
+        const stickerURLs = await getStickers();
+        setStickers(stickerURLs);
       }
     }
 
@@ -215,13 +213,13 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
           {modalOpen && (
             <Modal title='Choose sticker' close={() => setModalOpen((prev) => !prev)}>
               <div className='flex flex-wrap justify-between'>
-                {Object.entries(stickers).map((el, i) => (
+                {stickers.map((el, i) => (
                   <img
                     key={i}
-                    src={el[1].url}
+                    src={el}
                     className='h-32 w-32 object-contain'
                     onClick={() => {
-                      setSticker(el[1].url);
+                      setSticker(el);
                       setModalOpen((prev) => !prev);
                     }}
                   />
@@ -257,16 +255,5 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
       ) : null}
     </div>
   );
-
-
-
-
-
-
-
-
-
-
-
 
 };

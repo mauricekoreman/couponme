@@ -9,9 +9,6 @@ export default defineConfig({
     VitePWA({
       registerType: "prompt",
       strategies: "generateSW",
-      devOptions: {
-        enabled: true,
-      },
       manifest: {
         name: "CouponMe",
         short_name: "CouponMe",
@@ -46,9 +43,12 @@ export default defineConfig({
       "firebase/auth",
       "firebase/firestore",
       "firebase/analytics",
+      "firebase/storage",
     ],
   },
 });
+
+
 
 
 

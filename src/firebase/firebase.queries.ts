@@ -11,6 +11,8 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase.config";
 import { toast } from "react-toastify";
+import { ref, listAll, getDownloadURL } from "firebase/storage";
+import { storage } from "./firebase.config";
 
 export function getCouponsReceivedQuery(userId: string) {
   const couponsReceivedQuery = query(
@@ -33,10 +35,20 @@ export function getCouponsGivenQuery(userId: string) {
 }
 
 export async function getStickers() {
-  const catStickerRef = doc(collection(db, "stickers"), "cat-stickers");
-  const catStickersSnap = await getDoc(catStickerRef);
+  // ! deprecated
+  // const catStickerRef = doc(collection(db, "stickers"), "cat-stickers");
+  // const catStickersSnap = await getDoc(catStickerRef);
+  // return catStickersSnap;
+  // * new way:
+  const listRes = await listAll(ref(storage, "/cat-stickers"));
+  const stickersRef = listRes.items.map((itemRef) => itemRef);
+  let stickerURLs: string[] = [];
 
-  return catStickersSnap;
+  for (const sticker of stickersRef) {
+    stickerURLs.push(await getDownloadURL(sticker));
+  }
+
+  return stickerURLs;
 }
 
 export async function getCouponRef(couponId: string) {
@@ -80,4 +92,16 @@ export async function updateCoupon(couponData: DocumentData, couponId: string) {
         })
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
