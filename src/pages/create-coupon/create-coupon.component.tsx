@@ -117,13 +117,13 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
   }, []);
 
   return (
-    <div>
+    <div className='min-h-screen flex flex-col max-w-screen-xl mx-auto'>
       <Navbar
         navbarTitle={type === "create" ? "New coupon" : "Edit coupon"}
         withBackButton
         marginBottom={0}
       />
-      <form className='px-4 py-6' onSubmit={handleSubmit}>
+      <form className='max-w-md mx-auto px-4 py-6' onSubmit={handleSubmit}>
         <Input
           ref={titleRef}
           label='Title*'
@@ -257,6 +257,16 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
       ) : null}
     </div>
   );
+
+
+
+
+
+
+
+
+
+
 
 
 };
