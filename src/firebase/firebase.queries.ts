@@ -3,7 +3,6 @@ import {
   addDoc,
   collection,
   doc,
-  getDoc,
   orderBy,
   query,
   updateDoc,
@@ -35,11 +34,6 @@ export function getCouponsGivenQuery(userId: string) {
 }
 
 export async function getStickers() {
-  // ! deprecated
-  // const catStickerRef = doc(collection(db, "stickers"), "cat-stickers");
-  // const catStickersSnap = await getDoc(catStickerRef);
-  // return catStickersSnap;
-  // * new way:
   const listRes = await listAll(ref(storage, "/cat-stickers"));
   const stickersRef = listRes.items.map((itemRef) => itemRef);
   let stickerURLs: string[] = [];
@@ -92,6 +86,7 @@ export async function updateCoupon(couponData: DocumentData, couponId: string) {
         })
   );
 }
+
 
 
 

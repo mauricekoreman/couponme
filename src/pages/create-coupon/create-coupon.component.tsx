@@ -1,6 +1,5 @@
 import { colors } from "./colors";
 import { toast } from "react-toastify";
-import { DocumentData } from "firebase/firestore";
 import { useUser } from "../../context/user-context";
 import { useAuth } from "../../context/auth-context";
 import { inputDateString } from "../../utils/formatDate";
@@ -255,6 +254,7 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
       ) : null}
     </div>
   );
+
 
 
 };

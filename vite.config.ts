@@ -2,8 +2,6 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from "vite-plugin-pwa";
 
-// https://css-tricks.com/vitepwa-plugin-offline-service-worker/
-
 const getCache = ({ name, pattern }: { name: string; pattern: RegExp }) => ({
   urlPattern: pattern,
   handler: "CacheFirst" as const,
@@ -11,7 +9,7 @@ const getCache = ({ name, pattern }: { name: string; pattern: RegExp }) => ({
     cacheName: name,
     expiration: {
       maxEntries: 500,
-      maxAgeSeconds: 60 * 60 * 24, // 1 day
+      maxAgeSeconds: 60 * 60 * 24 * 20, // 20 days
     },
     cacheableResponse: {
       statuses: [200],
@@ -29,8 +27,14 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         runtimeCaching: [
           getCache({
-            name: "storage-cache",
-            pattern: /^https:\/\/firebasestorage.googleapis.com\/v0\/b\/couponet.c8c94.appspot.com/,
+            name: "stickers-cache",
+            pattern:
+              /^https:\/\/firebasestorage.googleapis.com\/v0\/b\/couponet.c8c94.appspot.com\/o\/cat-stickers(.*)/,
+          }),
+          getCache({
+            name: "test-image-cache",
+            pattern:
+              /^https:\/\/i.pinimg.com\/564x\/58\/3a\/9a\/583a9a12bacc0a7c3efa494eb20579df.jpg/,
           }),
         ],
       },
@@ -72,6 +76,18 @@ export default defineConfig({
     ],
   },
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
