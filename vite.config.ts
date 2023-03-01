@@ -7,7 +7,8 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
+      strategies: "generateSW",
       devOptions: {
         enabled: true,
       },
@@ -16,6 +17,7 @@ export default defineConfig({
         short_name: "CouponMe",
         description: "Coupon sharing app for couples",
         theme_color: "#FFFFF4",
+        background_color: "#FFFFF4",
         icons: [
           {
             src: "icons/manifest-icon-192.maskable.png",
@@ -47,6 +49,9 @@ export default defineConfig({
     ],
   },
 });
+
+
+
 
 
 
