@@ -256,4 +256,5 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
     </div>
   );
 
+
 };

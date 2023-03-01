@@ -9,6 +9,9 @@ export default defineConfig({
     VitePWA({
       registerType: "prompt",
       strategies: "generateSW",
+      workbox: {
+        cleanupOutdatedCaches: true,
+      },
       manifest: {
         name: "CouponMe",
         short_name: "CouponMe",
@@ -47,6 +50,7 @@ export default defineConfig({
     ],
   },
 });
+
 
 
 

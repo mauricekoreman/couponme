@@ -11,13 +11,15 @@ import { UserProvider } from "./context/user-context";
 
 import { registerSW } from "virtual:pwa-register";
 
-const updateSW = registerSW({
-  onNeedRefresh() {
-    if (confirm("New content available. Reload?")) {
-      updateSW(true);
-    }
-  },
-});
+if ("serviceWorker" in navigator) {
+  const updateSW = registerSW({
+    onNeedRefresh() {
+      if (confirm("An update is available. Confirm to reload")) {
+        updateSW(true);
+      }
+    },
+  });
+}
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -42,6 +44,12 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     </BrowserRouter>
   </React.StrictMode>
 );
+
+
+
+
+
+
 
 
 
