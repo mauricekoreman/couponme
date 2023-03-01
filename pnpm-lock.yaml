@@ -17,6 +17,7 @@ specifiers:
   typescript: ^4.9.4
   vite: ^4.0.0
   vite-plugin-pwa: ^0.14.4
+  workbox-window: ^6.5.4
 
 dependencies:
   firebase: 9.15.0
@@ -37,6 +38,7 @@ devDependencies:
   typescript: 4.9.4
   vite: 4.0.4_@types+node@18.11.18
   vite-plugin-pwa: 0.14.4_vite@4.0.4
+  workbox-window: 6.5.4
 
 packages:
 

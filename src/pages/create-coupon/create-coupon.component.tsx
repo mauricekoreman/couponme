@@ -38,7 +38,7 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
 
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
-  const [quantityCount, setQuantityCount] = useState(1);
+  const [quantityCount, setQuantityCount] = useState(couponState?.quantity ?? 1);
   const [selectedColor, setSelectedColor] = useState(couponState?.color ?? colors.blue);
   const [sticker, setSticker] = useState<string | null>(couponState?.sticker ?? null);
   const dateRef = useRef<HTMLInputElement>(null);
@@ -147,7 +147,7 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
           <label className={standardText}>Quantity</label>
           <div className='flex items-center w-36 justify-between mt-4'>
             <SecondaryButton textOrIcon={<FiMinus />} onClick={() => clickButton("subtract")} />
-            <p className={standardText}>{couponState?.quantity ?? quantityCount}</p>
+            <p className={standardText}>{quantityCount}</p>
             <SecondaryButton textOrIcon={<FiPlus />} onClick={() => clickButton("add")} />
           </div>
         </div>
@@ -257,5 +257,6 @@ export const CreateCoupon = ({ type }: { type: "edit" | "create" }) => {
       ) : null}
     </div>
   );
+
 
 };
