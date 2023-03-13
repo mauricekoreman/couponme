@@ -9,17 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserProvider } from "./context/user-context";
 
-import { registerSW } from "virtual:pwa-register";
-
-if ("serviceWorker" in navigator) {
-  const updateSW = registerSW({
-    onNeedRefresh() {
-      if (confirm("An update is available. Confirm to reload")) {
-        updateSW(true);
-      }
-    },
-  });
-}
+import { ReloadPrompt } from "./components/reload-prompt/reload-prompt.component";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -39,6 +29,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             theme='light'
           />
           <App />
+          <ReloadPrompt />
         </UserProvider>
       </AuthProvider>
     </BrowserRouter>

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import icon from "../../../assets/adaptive-icon.png";
 import { useAuth } from "../../../context/auth-context";
 import { PrimaryButton } from "../../../components/buttons/primary-button/primary-button.component";
 import { AuthHeading } from "../../../components/auth-heading/auth-heading.component";
@@ -25,4 +24,3 @@ export const Login = () => {
     </div>
   );
 };
-

@@ -21,6 +21,9 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      devOptions: {
+        enabled: true,
+      },
       registerType: "prompt",
       strategies: "generateSW",
       workbox: {
@@ -42,6 +45,18 @@ export default defineConfig({
         name: "CouponMe",
         short_name: "CouponMe",
         description: "Coupon sharing app for couples",
+        screenshots: [
+          {
+            src: "screenshots/ss-1.jpg",
+            label: "Received coupons screen",
+            sizes: "484x1024",
+          },
+          {
+            src: "screenshots/ss-2.jpg",
+            label: "Given coupons screen",
+            sizes: "484x1025",
+          },
+        ],
         theme_color: "#FFFFF4",
         background_color: "#FFFFF4",
         icons: [
