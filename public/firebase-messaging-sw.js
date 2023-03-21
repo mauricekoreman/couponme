@@ -15,4 +15,6 @@ self.addEventListener("activate", (e) => {
   console.log("Service worker: Activated");
 });
 
-self.skipWaiting();
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
+});
