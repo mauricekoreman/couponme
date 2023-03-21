@@ -2,7 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
-import { getMessaging, getToken } from "firebase/messaging";
+import { getMessaging, onMessage } from "firebase/messaging";
+import { getFirebaseToken } from "./firebase.functions";
 
 export const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -20,35 +21,25 @@ export const storage = getStorage(app);
 export const auth = getAuth(app);
 export const messaging = getMessaging(app);
 
-// Firebase cloud messaging setup
-// const getFirebaseToken = async () => {
-//   try {
-//     const currentToken = await getToken(messaging, {
-//       vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
-//     });
-//     if (currentToken) {
-//       console.log("currentToken: ", currentToken);
-//       // send token to server
-//       // ...
-//     } else {
-//       // show permission request
-//       console.log("No registration token available. Request permission to generate one");
-//     }
-//   } catch (error) {
-//     console.log("An error occured retrieving token. ", error);
-//   }
-// };
+const requestForRegToken = async () => {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      console.log("Notification permission granted");
+      getFirebaseToken();
+    }
+  } catch (error) {
+    console.error("An error occured trying to get notification permission...");
+  }
+};
 
-// export const requestForToken = async () => {
-//   try {
-//     const permission = await Notification.requestPermission();
-//     if (permission === "granted") {
-//       console.log("getting firebase token");
-//       await getFirebaseToken();
-//     } else {
-//       console.log("notification permission not granted... ");
-//     }
-//   } catch (error) {
-//     console.log("An error occured while getting user permission. ", error);
-//   }
-// };
+requestForRegToken();
+
+// handle incoming messages. Called when:
+// - a message is received while the app has focus
+// - the user clicks on an app notification created by a service worker
+// `messaging.onBackgroundMessage` handler.
+onMessage(messaging, (payload) => {
+  console.log("Message received. ", payload);
+  // ...
+});

@@ -1,6 +1,7 @@
-import { db } from "./firebase.config";
+import { db, messaging } from "./firebase.config";
 import { deleteDoc, doc, getDocs } from "firebase/firestore";
 import { getCouponsGivenQuery, getCouponsReceivedQuery } from "./firebase.queries";
+import { getToken } from "firebase/messaging";
 
 // delete all coupons that were given and received by these users
 export async function deleteCoupons({ userId }: { userId: string }) {
@@ -17,3 +18,19 @@ export async function deleteCoupons({ userId }: { userId: string }) {
     deleteDoc(doc(db, "coupons", id));
   }
 }
+
+export const getFirebaseToken = async () => {
+  try {
+    const currentToken = await getToken(messaging, {
+      vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+    });
+
+    if (currentToken) {
+      console.log("current token: ", currentToken);
+    } else {
+      console.log("No registration token available. Request permission to generate one");
+    }
+  } catch (error) {
+    console.error("An error occured while retrieving token... ", error);
+  }
+};
