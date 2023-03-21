@@ -19,6 +19,7 @@ specifiers:
   vite: ^4.0.0
   vite-plugin-pwa: ^0.14.4
   workbox-precaching: ^6.5.4
+  workbox-window: ^6.5.4
 
 dependencies:
   couponme: 'link:'
@@ -39,8 +40,9 @@ devDependencies:
   tailwindcss: 3.2.4_postcss@8.4.21
   typescript: 4.9.4
   vite: 4.0.4_@types+node@18.11.18
-  vite-plugin-pwa: 0.14.4_vite@4.0.4
+  vite-plugin-pwa: 0.14.4_aln3rhi4rqbizqxdkcc2hwlswu
   workbox-precaching: 6.5.4
+  workbox-window: 6.5.4
 
 packages:
 
@@ -4064,10 +4066,11 @@ packages:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
 
-  /vite-plugin-pwa/0.14.4_vite@4.0.4:
+  /vite-plugin-pwa/0.14.4_aln3rhi4rqbizqxdkcc2hwlswu:
     resolution: {integrity: sha512-M7Ct0so8OlouMkTWgXnl8W1xU95glITSKIe7qswZf1tniAstO2idElGCnsrTJ5NPNSx1XqfTCOUj8j94S6FD7Q==}
     peerDependencies:
       vite: ^3.1.0 || ^4.0.0
+      workbox-window: ^6.5.4
     dependencies:
       '@rollup/plugin-replace': 5.0.2_rollup@3.9.1
       debug: 4.3.4
