@@ -1,9 +1,9 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js");
 
 // NOTE: reference the various workbox.* namespaces outside of any event handlers or asynchronous functions.
+import { precacheAndRoute } from "workbox-precaching";
 
-const { registerRoute } = workbox.routing;
-const { StaleWhileRevalidate } = workbox.strategies;
+precacheAndRoute(self.__WB_MANIFEST);
 
 // install event
 self.addEventListener("install", (e) => {
@@ -14,3 +14,5 @@ self.addEventListener("install", (e) => {
 self.addEventListener("activate", (e) => {
   console.log("Service worker: Activated");
 });
+
+self.skipWaiting();
