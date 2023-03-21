@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from "vite-plugin-pwa";
+// import fs from "fs";
+// import path from "path";
+// const sslPath = path.join(process.cwd(), ".cert");
 
 const getCache = ({ name, pattern }: { name: string; pattern: RegExp }) => ({
   urlPattern: pattern,
@@ -18,14 +21,20 @@ const getCache = ({ name, pattern }: { name: string; pattern: RegExp }) => ({
 });
 
 export default defineConfig({
+  // server: {
+  //   host: "localhost",
+  //   https: {
+  //     key: fs.readFileSync(path.join(sslPath, "localhost-key.pem")),
+  //     cert: fs.readFileSync(path.join(sslPath, "localhost.pem")),
+  //   },
+  // },
   plugins: [
     react(),
     VitePWA({
-      devOptions: {
-        enabled: true,
-      },
+      devOptions: { enabled: true },
       registerType: "prompt",
-      strategies: "generateSW",
+      strategies: "injectManifest",
+      filename: "firebase-messaging-sw.js",
       workbox: {
         cleanupOutdatedCaches: true,
         runtimeCaching: [
@@ -88,6 +97,7 @@ export default defineConfig({
       "firebase/firestore",
       "firebase/analytics",
       "firebase/storage",
+      "firebase/messaging",
     ],
   },
 });

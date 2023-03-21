@@ -11,6 +11,16 @@ import { UserProvider } from "./context/user-context";
 
 import { ReloadPrompt } from "./components/reload-prompt/reload-prompt.component";
 
+
+// window.addEventListener("load", () => {
+//   if ("serviceWorker" in navigator) {
+//     navigator.serviceWorker
+//       .register("firebase-messaging-sw.js")
+//       .then(() => console.log("Service worker: Registered"))
+//       .catch((err) => console.warn("Couldn't register SW: ", err));
+//   }
+// });
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>

@@ -14,10 +14,16 @@ import { ProtectedRoute } from "./components/protected-route/protected-route";
 import { GivenCoupons } from "./pages/coupon-feed/given-coupons/given-coupons.component";
 import { ReceivedCoupons } from "./pages/coupon-feed/received-coupons/received-coupons.component";
 import { CouponFeedLayout } from "./pages/coupon-feed/coupon-feed-layout/coupon-feed-layout.component";
+import { useEffect } from "react";
+// import { requestForToken } from "./firebase/firebase.config";
 
 function App() {
   const { userLoaded, user } = useAuth();
   const { userData, userDataLoading } = useUser();
+
+  // useEffect(() => {
+  //   requestForToken();
+  // }, []);
 
   if (!userLoaded || userDataLoading) {
     return <Loading />;

@@ -6,6 +6,7 @@ specifiers:
   '@types/react-dom': ^18.0.9
   '@vitejs/plugin-react-swc': ^3.0.0
   autoprefixer: ^10.4.13
+  couponme: 'link:'
   firebase: ^9.17.1
   postcss: ^8.4.21
   react: ^18.2.0
@@ -17,9 +18,9 @@ specifiers:
   typescript: ^4.9.4
   vite: ^4.0.0
   vite-plugin-pwa: ^0.14.4
-  workbox-window: ^6.5.4
 
 dependencies:
+  couponme: 'link:'
   firebase: 9.17.1
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -37,8 +38,7 @@ devDependencies:
   tailwindcss: 3.2.4_postcss@8.4.21
   typescript: 4.9.4
   vite: 4.0.4_@types+node@18.11.18
-  vite-plugin-pwa: 0.14.4_aln3rhi4rqbizqxdkcc2hwlswu
-  workbox-window: 6.5.4
+  vite-plugin-pwa: 0.14.4_vite@4.0.4
 
 packages:
 
@@ -4062,11 +4062,10 @@ packages:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
 
-  /vite-plugin-pwa/0.14.4_aln3rhi4rqbizqxdkcc2hwlswu:
+  /vite-plugin-pwa/0.14.4_vite@4.0.4:
     resolution: {integrity: sha512-M7Ct0so8OlouMkTWgXnl8W1xU95glITSKIe7qswZf1tniAstO2idElGCnsrTJ5NPNSx1XqfTCOUj8j94S6FD7Q==}
     peerDependencies:
       vite: ^3.1.0 || ^4.0.0
-      workbox-window: ^6.5.4
     dependencies:
       '@rollup/plugin-replace': 5.0.2_rollup@3.9.1
       debug: 4.3.4
