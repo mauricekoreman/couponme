@@ -20,7 +20,6 @@ export const ReceivedCoupons = () => {
           key={coupon.id}
         />
       ))}
-      <div className='h-20 w-20 bg-blue' />
     </div>
   ) : (
     <div className={"flex flex-col gap-4 justify-center items-center mt-10"}>
@@ -31,7 +30,6 @@ export const ReceivedCoupons = () => {
       <h2 className='font-displayRegular text-xl text-center'>
         You have no coupons from {userData?.linkedUserName} yet!
       </h2>
-      <div className='h-20 w-20 bg-blue' />
     </div>
   );
 };
