@@ -1,8 +1,8 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js");
 
-// import { initializeApp } from "firebase/app";
-// import { getMessaging } from "firebase/messaging";
-// import { onBackgroundMessage } from "firebase/messaging/sw";
+import { initializeApp } from "firebase/app";
+import { getMessaging } from "firebase/messaging";
+import { onBackgroundMessage } from "firebase/messaging/sw";
 
 // NOTE: reference the various workbox.* namespaces outside of any event handlers or asynchronous functions.
 if (process.env.NODE_ENV === "production") {
@@ -39,6 +39,7 @@ self.addEventListener("message", (event) => {
 //   console.log("Received background message in service worker: ", payload);
 
 //   // self.registration.showNotification()
+
 
 
 // });
