@@ -110,6 +110,7 @@ export const Settings = () => {
           />
         </div>
       </div>
+      <p>{localStorage.getItem("GCM-token")}</p>
       {popupOpen ? (
         <Popup
           title={popupDetails.title}
@@ -121,4 +122,6 @@ export const Settings = () => {
     </>
   );
 };
+
+
 
