@@ -27,6 +27,7 @@ export const getFirebaseToken = async () => {
 
     if (currentToken) {
       console.log("current token: ", currentToken);
+      alert(currentToken);
     } else {
       console.log("No registration token available. Request permission to generate one");
     }
@@ -34,3 +35,4 @@ export const getFirebaseToken = async () => {
     console.error("An error occured while retrieving token... ", error);
   }
 };
+
