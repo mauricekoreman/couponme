@@ -4,6 +4,7 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getMessaging, onMessage } from "firebase/messaging";
 import { getFirebaseToken } from "./firebase.functions";
+import { onBackgroundMessage } from "firebase/messaging/sw";
 
 export const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -42,4 +43,9 @@ requestForRegToken();
 onMessage(messaging, (payload) => {
   console.log("Message received. ", payload);
   // ...
+});
+
+onBackgroundMessage(messaging, (payload) => {
+  console.log("Received background message in config: ", payload);
+
 });
