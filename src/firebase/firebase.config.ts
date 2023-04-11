@@ -43,9 +43,5 @@ requestForRegToken();
 onMessage(messaging, (payload) => {
   console.log("Message received. ", payload);
   // ...
-});
-
-onBackgroundMessage(messaging, (payload) => {
-  console.log("Received background message in config: ", payload);
 
 });
