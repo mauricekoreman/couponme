@@ -10,16 +10,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { UserProvider } from "./context/user-context";
 
 import { ReloadPrompt } from "./components/reload-prompt/reload-prompt.component";
+import { registerServiceWorker } from "./utils/service-worker-functions";
 
-
-// window.addEventListener("load", () => {
-//   if ("serviceWorker" in navigator) {
-//     navigator.serviceWorker
-//       .register("firebase-messaging-sw.js")
-//       .then(() => console.log("Service worker: Registered"))
-//       .catch((err) => console.warn("Couldn't register SW: ", err));
-//   }
-// });
+// Check if browser supports service worker at all
+if ("serviceWorker" in navigator) {
+  registerServiceWorker();
+}
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -45,6 +41,17 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     </BrowserRouter>
   </React.StrictMode>
 );
+
+
+
+
+
+
+
+
+
+
+
 
 
 

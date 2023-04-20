@@ -1,93 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
-import { VitePWA } from "vite-plugin-pwa";
-// import fs from "fs";
-// import path from "path";
-// const sslPath = path.join(process.cwd(), ".cert");
-
-const getCache = ({ name, pattern }: { name: string; pattern: RegExp }) => ({
-  urlPattern: pattern,
-  handler: "CacheFirst" as const,
-  options: {
-    cacheName: name,
-    expiration: {
-      maxEntries: 500,
-      maxAgeSeconds: 60 * 60 * 24 * 20, // 20 days
-    },
-    cacheableResponse: {
-      statuses: [200],
-    },
-  },
-});
 
 export default defineConfig({
-  // server: {
-  //   host: "localhost",
-  //   https: {
-  //     key: fs.readFileSync(path.join(sslPath, "localhost-key.pem")),
-  //     cert: fs.readFileSync(path.join(sslPath, "localhost.pem")),
-  //   },
-  // },
   plugins: [
     react(),
-    VitePWA({
-      // devOptions: { enabled: true },
-      registerType: "prompt",
-      strategies: "injectManifest",
-      filename: "firebase-messaging-sw.js",
-      workbox: {
-        cleanupOutdatedCaches: true,
-        runtimeCaching: [
-          getCache({
-            name: "stickers-cache",
-            pattern:
-              /^https:\/\/firebasestorage.googleapis.com\/v0\/b\/couponet.c8c94.appspot.com\/o\/cat-stickers(.*)/,
-          }),
-          getCache({
-            name: "test-image-cache",
-            pattern:
-              /^https:\/\/i.pinimg.com\/564x\/58\/3a\/9a\/583a9a12bacc0a7c3efa494eb20579df.jpg/,
-          }),
-        ],
-      },
-      manifest: {
-        name: "CouponMe",
-        short_name: "CouponMe",
-        description: "Coupon sharing app for couples",
-        screenshots: [
-          {
-            src: "screenshots/ss-1.jpg",
-            label: "Received coupons screen",
-            sizes: "484x1024",
-          },
-          {
-            src: "screenshots/ss-2.jpg",
-            label: "Given coupons screen",
-            sizes: "484x1025",
-          },
-        ],
-        theme_color: "#FFFFF4",
-        background_color: "#FFFFF4",
-        icons: [
-          {
-            src: "icons/manifest-icon-192.maskable.png",
-            sizes: "192x192",
-            type: "image/png",
-          },
-          {
-            src: "icons/manifest-icon-512.maskable.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
-          {
-            src: "icons/manifest-icon-512.maskable.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-        ],
-      },
-    }),
   ],
   optimizeDeps: {
     exclude: [
@@ -101,6 +17,33 @@ export default defineConfig({
     ],
   },
 });
+
+
+// const getCache = ({ name, pattern }: { name: string; pattern: RegExp }) => ({
+//   urlPattern: pattern,
+//   handler: "CacheFirst" as const,
+//   options: {
+//     cacheName: name,
+//     expiration: {
+//       maxEntries: 500,
+//       maxAgeSeconds: 60 * 60 * 24 * 20, // 20 days
+//     },
+//     cacheableResponse: {
+//       statuses: [200],
+//     },
+//   },
+// });
+
+// getCache({
+//   name: "stickers-cache",
+//   pattern:
+//     /^https:\/\/firebasestorage.googleapis.com\/v0\/b\/couponet.c8c94.appspot.com\/o\/cat-stickers(.*)/,
+// }),
+// getCache({
+//   name: "test-image-cache",
+//   pattern:
+//     /^https:\/\/i.pinimg.com\/564x\/58\/3a\/9a\/583a9a12bacc0a7c3efa494eb20579df.jpg/,
+// }),
 
 
 

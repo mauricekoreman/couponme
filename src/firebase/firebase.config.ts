@@ -2,9 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
-import { getMessaging, onMessage } from "firebase/messaging";
+import { getMessaging } from "firebase/messaging";
 import { getFirebaseToken } from "./firebase.functions";
-import { onBackgroundMessage } from "firebase/messaging/sw";
 
 export const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -34,14 +33,5 @@ const requestForRegToken = async () => {
   }
 };
 
+
 requestForRegToken();
-
-// handle incoming messages. Called when:
-// - a message is received while the app has focus
-// - the user clicks on an app notification created by a service worker
-// `messaging.onBackgroundMessage` handler.
-onMessage(messaging, (payload) => {
-  console.log("Message received. ", payload);
-  // ...
-
-});

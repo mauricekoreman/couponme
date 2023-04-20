@@ -1,25 +1,32 @@
-import { useRegisterSW } from "virtual:pwa-register/react";
+// import { useRegisterSW } from "virtual:pwa-register/react";
 
 const buttonStyles = "font-regularSemiBold text-base border p-2 rounded-sm";
 
 export const ReloadPrompt = () => {
-  const {
-    offlineReady: [offlineReady, setOfflineReady],
-    needRefresh: [needRefresh, setNeedRefresh],
-    updateServiceWorker,
-  } = useRegisterSW({
-    onRegisteredSW(r) {
-      console.log("SW registered: " + r);
-    },
-    onRegisterError(error) {
-      console.log("SW registration error " + error);
-    },
-  });
+  // const {
+  //   offlineReady: [offlineReady, setOfflineReady],
+  //   needRefresh: [needRefresh, setNeedRefresh],
+  //   updateServiceWorker,
+  // } = useRegisterSW({
+  //   onRegisteredSW(r) {
+  //     console.log("SW registered: " + r);
+  //   },
+  //   onRegisterError(error) {
+  //     console.log("SW registration error " + error);
+  //   },
+  // });
 
-  const close = () => {
-    setOfflineReady(false);
-    setNeedRefresh(false);
-  };
+  // const close = () => {
+  //   setOfflineReady(false);
+  //   setNeedRefresh(false);
+  // };
+
+  function updateServiceWorker(e: boolean) {
+    console.log("[MOCK]: updating service worker");
+  }
+
+  const offlineReady = false;
+  const needRefresh = false;
 
   return offlineReady || needRefresh ? (
     <div className='mx-auto left-3 right-3 fixed bottom-0 mb-16'>
@@ -41,3 +48,4 @@ export const ReloadPrompt = () => {
     </div>
   ) : null;
 };
+

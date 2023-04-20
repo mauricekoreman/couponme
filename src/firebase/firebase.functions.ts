@@ -25,6 +25,15 @@ export const getFirebaseToken = async () => {
       vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
     });
 
+    // TODO: sage token to database with timestamp and update whenever the token changes, such as when:
+    /* *
+     * 1. the app is restored on a new device
+     * 2. the user installs/reinstalls app
+     * 3. the user clears app data.
+     *
+     * todo: check if the generated token is the same as currently in the database. If not, change, else, do nothing.
+     */
+
     if (currentToken) {
       console.log("current token: ", currentToken);
       localStorage.setItem("GCM-token", currentToken);
@@ -35,6 +44,8 @@ export const getFirebaseToken = async () => {
     console.error("An error occured while retrieving token... ", error);
   }
 };
+
+
 
 
 

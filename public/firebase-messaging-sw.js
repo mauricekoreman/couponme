@@ -1,42 +1,36 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js");
+importScripts("https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js");
 
-import { initializeApp } from "firebase/app";
-import { getMessaging } from "firebase/messaging";
-import { onBackgroundMessage } from "firebase/messaging/sw";
-
-// NOTE: reference the various workbox.* namespaces outside of any event handlers or asynchronous functions.
-if (process.env.NODE_ENV === "production") {
-  workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
-}
-
-// install event
-self.addEventListener("install", (e) => {
-  console.log("Service worker: Installed");
-});
-
-// activate event
-self.addEventListener("activate", (e) => {
-  console.log("Service worker: Activated");
+self.addEventListener("fetch", (e) => {
+  // console.log(`[Service worker]: Fetched resource ${e.request.url}`);
 });
 
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
+  if (event.data === "SKIP_WAITING") self.skipWaiting();
 });
 
-const firebaseApp = initializeApp({
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+// FCM
+firebase.initializeApp({
+  apiKey: "AIzaSyD34XbCLpJEV5N-15v3ZbLco6wUo7awPV0",
+  authDomain: "coupon-dev-d8e92.firebaseapp.com",
+  projectId: "coupon-dev-d8e92",
+  storageBucket: "coupon-dev-d8e92.appspot.com",
+  messagingSenderId: "94418588262",
+  appId: "1:94418588262:web:e014a964b19c80e8c793a7",
+  measurementId: "G-C3217K58FK",
 });
 
-const messaging = getMessaging(firebaseApp);
+const messaging = firebase.messaging();
 
-// onBackgroundMessage(messaging, (payload) => {
-//   console.log("Received background message in service worker: ", payload);
+messaging.onBackgroundMessage((payload) => {
+  console.log("[Service worker]: received background message: ", payload);
 
+  const notificationTitle = "Background message title";
+  const notificationOptions = {
+    body: "background message body",
+  };
 
-// });
+  self.registration.showNotification(notificationTitle, notificationOptions);
+
+});
