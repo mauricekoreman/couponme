@@ -3,19 +3,14 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 import { BrowserRouter } from "react-router-dom";
+
 import { AuthProvider } from "./context/auth-context";
+import { UserProvider } from "./context/user-context";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { UserProvider } from "./context/user-context";
 
 import { ReloadPrompt } from "./components/reload-prompt/reload-prompt.component";
-import { registerServiceWorker } from "./utils/service-worker-functions";
-
-// Check if browser supports service worker at all
-if ("serviceWorker" in navigator) {
-  registerServiceWorker();
-}
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

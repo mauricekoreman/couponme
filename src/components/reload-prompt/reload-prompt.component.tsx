@@ -1,32 +1,70 @@
-// import { useRegisterSW } from "virtual:pwa-register/react";
+import { useEffect, useState } from "react";
 
 const buttonStyles = "font-regularSemiBold text-base border p-2 rounded-sm";
 
 export const ReloadPrompt = () => {
-  // const {
-  //   offlineReady: [offlineReady, setOfflineReady],
-  //   needRefresh: [needRefresh, setNeedRefresh],
-  //   updateServiceWorker,
-  // } = useRegisterSW({
-  //   onRegisteredSW(r) {
-  //     console.log("SW registered: " + r);
-  //   },
-  //   onRegisterError(error) {
-  //     console.log("SW registration error " + error);
-  //   },
-  // });
+  const [offlineReady, setOfflineReady] = useState(false);
+  const [needRefresh, setNeedRefresh] = useState(false);
+  const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
 
-  // const close = () => {
-  //   setOfflineReady(false);
-  //   setNeedRefresh(false);
-  // };
-
-  function updateServiceWorker(e: boolean) {
-    console.log("[MOCK]: updating service worker");
+  function updateServiceWorker() {
+    if (registration?.waiting) {
+      // let waiting Service Worker know it should became active
+      registration.waiting.postMessage("SKIP_WAITING");
+    }
   }
 
-  const offlineReady = false;
-  const needRefresh = false;
+  function registerServiceWorker() {
+    window.addEventListener("load", async () => {
+      const registration = await navigator.serviceWorker.register("firebase-messaging-sw.js");
+
+      // when the updatefound event was missed is also handled
+      // by re-invoking the prompt when there's a waiting Service Worker
+      if (registration.waiting) {
+        setRegistration(registration);
+        setNeedRefresh(true);
+      }
+
+      // detect Service Worker update available and wait for it to become installed
+      registration.addEventListener("updatefound", () => {
+        if (registration.installing) {
+          // wait until the new Service worker is actually installed (ready to take over)
+          registration.installing.addEventListener("statechange", () => {
+            if (registration.waiting) {
+              // if there's an existing controller (previous Service Worker), show the prompt
+              if (navigator.serviceWorker.controller) {
+                setRegistration(registration);
+                setNeedRefresh(true);
+              } else {
+                // otherwise it's the first install, nothing to do
+                setOfflineReady(true);
+                console.log("Service worker initialized for the first time.");
+              }
+            }
+          });
+        }
+      });
+
+      let refreshing = false;
+
+      // detect controller change and refresh the page
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (!refreshing) {
+          window.location.reload();
+          refreshing = true;
+        }
+      });
+    });
+  }
+
+  function close() {
+    setOfflineReady(false);
+    setNeedRefresh(false);
+  }
+
+  useEffect(() => {
+    registerServiceWorker();
+  }, []);
 
   return offlineReady || needRefresh ? (
     <div className='mx-auto left-3 right-3 fixed bottom-0 mb-16'>
@@ -38,7 +76,7 @@ export const ReloadPrompt = () => {
         </p>
         <div className='flex gap-3 justify-center'>
           {needRefresh && (
-            <button onClick={() => updateServiceWorker(true)} className={buttonStyles}>
+            <button onClick={() => updateServiceWorker()} className={buttonStyles}>
               Reload
             </button>
           )}
@@ -48,4 +86,3 @@ export const ReloadPrompt = () => {
     </div>
   ) : null;
 };
-

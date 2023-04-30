@@ -11,8 +11,8 @@ import {
 import { toast } from "react-toastify";
 import { auth, db } from "../firebase/firebase.config";
 import { generateRandom } from "../utils/generate-random";
-import { deleteCoupons } from "../firebase/firebase.functions";
-import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteCoupons, saveMessagingTokenToDB } from "../firebase/firebase.functions";
+import { deleteDoc, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type TUser = User | null | undefined;
@@ -47,14 +47,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const user = await signInWithPopup(auth, provider);
       if (getAdditionalUserInfo(user)?.isNewUser) {
+        const token = localStorage.getItem("GCM-token");
         return await setDoc(doc(db, "users", user.user.uid), {
           email: user.user.email,
           name: user.user.displayName,
           linked: null,
           code: generateRandom(6),
+          cloudMessaging: { token: token, timestamp: new Date() },
         });
       } else {
-        return;
+        return await saveMessagingTokenToDB(user.user.uid);
       }
     } catch (error) {
       if (error instanceof Error) {

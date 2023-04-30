@@ -2,6 +2,7 @@ importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox
 importScripts("https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js");
 importScripts("https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js");
 
+// Fetch handler is needed for PWA recognition. 
 self.addEventListener("fetch", (e) => {
   // console.log(`[Service worker]: Fetched resource ${e.request.url}`);
 });
@@ -22,15 +23,18 @@ firebase.initializeApp({
 });
 
 const messaging = firebase.messaging();
+messaging.onBackgroundMessage();
 
-messaging.onBackgroundMessage((payload) => {
-  console.log("[Service worker]: received background message: ", payload);
+// * Below is for cusomizing the message.
+// messaging.onBackgroundMessage((payload) => {
+//   console.log("[Service worker]: received background message: ", payload);
 
-  const notificationTitle = "Background message title";
-  const notificationOptions = {
-    body: "background message body",
-  };
+//   const notificationTitle = "Background message title";
+//   const notificationOptions = {
+//     body: "background message body",
+//   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+//   self.registration.showNotification(notificationTitle, notificationOptions);
 
-});
+// });
+

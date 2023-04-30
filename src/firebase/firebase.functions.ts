@@ -1,5 +1,5 @@
 import { db, messaging } from "./firebase.config";
-import { deleteDoc, doc, getDocs } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
 import { getCouponsGivenQuery, getCouponsReceivedQuery } from "./firebase.queries";
 import { getToken } from "firebase/messaging";
 
@@ -25,15 +25,6 @@ export const getFirebaseToken = async () => {
       vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
     });
 
-    // TODO: sage token to database with timestamp and update whenever the token changes, such as when:
-    /* *
-     * 1. the app is restored on a new device
-     * 2. the user installs/reinstalls app
-     * 3. the user clears app data.
-     *
-     * todo: check if the generated token is the same as currently in the database. If not, change, else, do nothing.
-     */
-
     if (currentToken) {
       console.log("current token: ", currentToken);
       localStorage.setItem("GCM-token", currentToken);
@@ -45,7 +36,41 @@ export const getFirebaseToken = async () => {
   }
 };
 
+export const getSavedFirebaseToken = async (userId: string) => {
+  try {
+    const userDocRef = doc(db, "users", userId);
+    const docSnap = await getDoc(userDocRef);
 
+    if (!docSnap.exists()) {
+      return null;
+    }
+
+    return docSnap.data().cloudMessaging;
+  } catch (error) {
+    console.error("An error occured while retrieving the GCM token from the DB...", error);
+  }
+};
+
+export const saveMessagingTokenToDB = async (userId: string) => {
+  try {
+    const userDocRef = doc(db, "users", userId);
+    const token = localStorage.getItem("GCM-token");
+    const savedToken = await getSavedFirebaseToken(userId);
+
+    // token exists and doesn't need to get updated.
+    if (token === savedToken?.token) {
+      return;
+    }
+
+    if (token) {
+      return await updateDoc(userDocRef, {
+        cloudMessaging: { token: token, timestamp: new Date() },
+      });
+    }
+  } catch (error) {
+    console.error("An error occured saving messaging token to the DB...", error);
+  }
+};
 
 
 
